@@ -18,6 +18,7 @@ import { apiReference } from "@scalar/express-api-reference";
 import openapiSpec from "./docs/openapi.json";
 
 // Routes
+import publicRoutes from "./modules/public/public.routes";
 import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/users.routes";
 import rbacRoutes from "./modules/rbac/rbac.routes";
@@ -39,6 +40,7 @@ import systemRoutes from "./modules/system/system.routes";
 import featureFlagsRoutes from "./modules/feature-flags/feature-flags.routes";
 import onboardingRoutes from "./modules/onboarding/onboarding.routes";
 import auditRoutes from "./modules/audit/audit.routes";
+import marketingRoutes from "./modules/marketing/marketing.routes";
 // Phase 2 — Department Modules
 import healthPostRoutes from "./modules/health-posts/health-posts.routes";
 import { healthInventoryRouter, educationInventoryRouter, agricultureInventoryRouter } from "./modules/inventory/inventory.routes";
@@ -141,9 +143,11 @@ v1.use("/roles",             rbacRoutes);
 v1.use("/wards",             wardRoutes);
 v1.use("/citizens",          citizenRoutes);
 v1.use("/documents",         documentRoutes);
+v1.use("/marketing",         marketingRoutes);
 v1.use("/correspondence",    correspondenceRoutes);
 v1.use("/service-requests",  serviceRequestRoutes);
 v1.use("/registration",      registrationRoutes);
+v1.use("/public",            publicRoutes);
 v1.use("/complaints",        complaintRoutes);
 
 v1.use("/portal",            portalRoutes);
