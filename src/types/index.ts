@@ -110,6 +110,8 @@ export interface AuthUser {
   wardId?: string;
   roles: SystemRole[];
   tenantId?: string;
+  branchId?: string;
+  personId?: string;
   roleAssignments?: Array<{
     tenantId: string;
     branchId?: string;

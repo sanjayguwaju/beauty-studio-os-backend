@@ -25,7 +25,7 @@ export async function generateRecommendations(req: AuthRequest, res: Response) {
     reasoning: "Based on your recent visit history, we think you would love this complementary service.",
   });
 
-  return sendSuccess(res, recommendation, 201);
+  return sendSuccess(res, recommendation, "Recommendation created", 201);
 }
 
 export async function getRecommendations(req: AuthRequest, res: Response) {
@@ -83,7 +83,7 @@ export async function processOcr(req: AuthRequest, res: Response) {
     status: "pending"
   });
 
-  return sendSuccess(res, extraction, 201);
+  return sendSuccess(res, extraction, "OCR extraction processed", 201);
 }
 
 export async function getPendingOcr(req: AuthRequest, res: Response) {

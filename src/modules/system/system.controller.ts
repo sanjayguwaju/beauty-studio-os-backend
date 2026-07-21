@@ -12,7 +12,7 @@ import { RoleAssignment } from "../../models/RoleAssignment";
 import { Branch } from "../../models/Branch";
 import { ImpersonationLog } from "../../models/ImpersonationLog";
 import jwt from "jsonwebtoken";
-import { jwtSecret } from "../../config/auth";
+import { env } from "../../config/env";
 
 export async function getRedisStats(req: AuthRequest, res: Response) {
   try {
@@ -251,27 +251,24 @@ export async function signupTenant(req: Request, res: Response) {
     });
 
     const user = await User.create({
-      tenantId: tenantId as any,
-      personId: person._id,
-      username: ownerEmail,
+      municipalityId: tenantId as any,
+      name: ownerName,
       email: ownerEmail,
       password, // Should be hashed in pre-save middleware
       isActive: true
     });
 
     // 6. Assign Role
-    let adminRole = await Role.findOne({ name: "tenant_admin", tenantId });
-    if (!adminRole) {
-      adminRole = await Role.create({ name: "tenant_admin", tenantId, permissions: ["all"] });
-    }
-
     await RoleAssignment.create({
       tenantId,
-      userId: user._id,
-      roleId: adminRole._id
+      personId: person._id,
+      role: "owner"
     });
 
-    return sendSuccess(res, { tenant, user: { id: user._id, username: user.username } }, 201);
+    user.rolesSlugs = ["municipality_admin" as any];
+    await user.save();
+
+    return sendSuccess(res, { tenant, user: { id: user._id, email: user.email } }, "Tenant created successfully", 201);
   } catch (error: any) {
     console.error(error);
     return sendError(res, 500, "Failed to create tenant: " + error.message);
@@ -289,13 +286,13 @@ export async function impersonateTenant(req: AuthRequest, res: Response) {
     }
 
     // Find the primary admin for this tenant
-    const role = await Role.findOne({ name: "tenant_admin", tenantId });
-    if (!role) return sendError(res, 404, "Tenant admin role not found");
-    
-    const roleAssignment = await RoleAssignment.findOne({ tenantId, roleId: role._id });
+    const roleAssignment = await RoleAssignment.findOne({ tenantId, role: "owner" });
     if (!roleAssignment) return sendError(res, 404, "No admin user found for tenant");
     
-    const targetUser = await User.findById(roleAssignment.userId);
+    const targetPerson = await Person.findById(roleAssignment.personId);
+    if (!targetPerson) return sendError(res, 404, "Target person not found");
+    
+    const targetUser = await User.findOne({ email: targetPerson.email });
     if (!targetUser) return sendError(res, 404, "Target user not found");
 
     // Log impersonation
@@ -308,17 +305,17 @@ export async function impersonateTenant(req: AuthRequest, res: Response) {
     // Generate token for target user
     const token = jwt.sign(
       { 
-        id: targetUser._id, 
+        sub: targetUser._id.toString(), 
         tenantId,
-        roles: ["tenant_admin"],
+        roles: ["municipality_admin"],
         isImpersonated: true,
         originalUserId: req.user.id
       },
-      jwtSecret,
+      env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    return sendSuccess(res, { token, user: { id: targetUser._id, username: targetUser.username } }, "Impersonation started");
+    return sendSuccess(res, { token, user: { id: targetUser._id, email: targetUser.email } }, "Impersonation started");
   } catch (error) {
     console.error(error);
     return sendError(res, 500, "Failed to impersonate");

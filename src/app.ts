@@ -28,7 +28,7 @@ import correspondenceRoutes from "./modules/correspondence/correspondence.routes
 import serviceRequestRoutes from "./modules/service-requests/service-requests.routes";
 import registrationRoutes from "./modules/registration/registration.routes";
 import complaintRoutes from "./modules/complaints/complaints.routes";
-import academyRoutes from "./modules/academy/academy.routes";
+
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import portalRoutes from "./modules/portal/portal.routes";
 import notificationRoutes from "./modules/notifications/notifications.routes";
@@ -38,6 +38,7 @@ import uploadRoutes from "./modules/upload/upload.routes";
 import systemRoutes from "./modules/system/system.routes";
 import featureFlagsRoutes from "./modules/feature-flags/feature-flags.routes";
 import onboardingRoutes from "./modules/onboarding/onboarding.routes";
+import auditRoutes from "./modules/audit/audit.routes";
 // Phase 2 — Department Modules
 import healthPostRoutes from "./modules/health-posts/health-posts.routes";
 import { healthInventoryRouter, educationInventoryRouter, agricultureInventoryRouter } from "./modules/inventory/inventory.routes";
@@ -144,7 +145,7 @@ v1.use("/correspondence",    correspondenceRoutes);
 v1.use("/service-requests",  serviceRequestRoutes);
 v1.use("/registration",      registrationRoutes);
 v1.use("/complaints",        complaintRoutes);
-v1.use("/academy",           requireFeature("academy"), academyRoutes);
+
 v1.use("/portal",            portalRoutes);
 v1.use("/notifications",     notificationRoutes);
 v1.use("/reports",           reportsRoutes);

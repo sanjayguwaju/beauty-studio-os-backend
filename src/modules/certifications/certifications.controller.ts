@@ -82,7 +82,7 @@ export async function overrideStatus(req: AuthRequest, res: Response) {
 
   status.satisfied = true;
   status.satisfiedAt = new Date();
-  status.overrideByPersonId = instructorId; // Note: Ensure req.user has personId or use req.user.id depending on auth design
+  status.overrideByPersonId = instructorId as any; // Note: Ensure req.user has personId or use req.user.id depending on auth design
   
   await status.save();
   return sendSuccess(res, status, "Requirement manually overridden");

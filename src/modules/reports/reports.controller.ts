@@ -20,7 +20,7 @@ export async function getKPIs(req: AuthRequest, res: Response) {
 
   const revenueAggregation = await Invoice.aggregate([
     { $match: invoiceMatch },
-    { $group: { _id: "$category", total: { $sum: "$totalAmount" } } }
+    { $group: { _id: "$type", total: { $sum: "$totalAmount" } } }
   ]);
 
   let salonRevenue = 0;
@@ -79,11 +79,11 @@ export async function exportReport(req: AuthRequest, res: Response) {
     const invoiceMatch: any = { tenantId, status: "paid" };
     if (Object.keys(dateFilter).length > 0) invoiceMatch.issuedAt = dateFilter;
     
-    const invoices = await Invoice.find(invoiceMatch).populate("personId").lean();
+    const invoices = await Invoice.find(invoiceMatch).populate("clientOrStudentPersonId").lean();
     csvContent = "Invoice ID,Date,Category,Amount,Client\n";
     invoices.forEach(inv => {
-      const clientName = (inv.personId as any)?.fullName || "Unknown";
-      csvContent += `${inv._id},${new Date(inv.issuedAt).toLocaleDateString()},${inv.category},${inv.totalAmount},${clientName}\n`;
+      const clientName = (inv.clientOrStudentPersonId as any)?.fullName || "Unknown";
+      csvContent += `${inv._id},${new Date(inv.issuedAt).toLocaleDateString()},${inv.type},${inv.totalAmount},${clientName}\n`;
     });
   } else if (type === "funnel") {
     const enrollments = await Enrollment.find({ tenantId }).populate("studentPersonId").populate("batchId").lean();

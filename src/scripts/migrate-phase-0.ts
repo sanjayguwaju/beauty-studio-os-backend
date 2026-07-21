@@ -11,7 +11,7 @@ import { Role } from "../models/Role";
 
 async function runMigration() {
   console.log("Connecting to database...");
-  await mongoose.connect(env.DATABASE_URL);
+  await mongoose.connect(env.MONGODB_URI);
   console.log("Connected.");
 
   console.log("Migrating Municipalities -> Tenants...");
@@ -36,8 +36,8 @@ async function runMigration() {
         themeConfig: mun.themeConfig,
         isActive: mun.isActive,
         status: mun.status,
-        createdAt: mun.createdAt,
-        updatedAt: mun.updatedAt,
+        createdAt: (mun as any).createdAt,
+        updatedAt: (mun as any).updatedAt,
       });
       console.log(`Migrated Tenant: ${mun.name}`);
     }
@@ -56,8 +56,8 @@ async function runMigration() {
         address: ward.officeAddress,
         contactPhone: ward.contactPhone,
         isActive: ward.isActive,
-        createdAt: ward.createdAt,
-        updatedAt: ward.updatedAt,
+        createdAt: (ward as any).createdAt,
+        updatedAt: (ward as any).updatedAt,
       });
       console.log(`Migrated Branch: Branch ${ward.wardNumber}`);
     }
@@ -79,8 +79,8 @@ async function runMigration() {
         image: user.image,
         isActive: user.isActive,
         refreshToken: user.refreshToken,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        createdAt: (user as any).createdAt,
+        updatedAt: (user as any).updatedAt,
       });
       console.log(`Migrated Person: ${person.fullName}`);
     }
@@ -102,7 +102,7 @@ async function runMigration() {
           branchId: user.wardId,
           role: mappedRole,
           status: user.isActive ? "active" : "inactive",
-          startedAt: user.createdAt,
+          startedAt: (user as any).createdAt,
         });
         console.log(`Created RoleAssignment for ${person.fullName} -> ${mappedRole}`);
       }

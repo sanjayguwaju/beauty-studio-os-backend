@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { authenticate } from "../../middleware/auth.middleware";
-import { asyncHandler } from "../../utils/asyncHandler";
 import * as controller from "./portal.controller";
 
 const router = Router();
@@ -8,13 +7,13 @@ const router = Router();
 router.use(authenticate);
 
 // Client Routes
-router.get("/client/appointments", asyncHandler(controller.getClientAppointments));
-router.post("/client/appointments", asyncHandler(controller.bookClientAppointment));
-router.get("/client/invoices", asyncHandler(controller.getClientInvoices));
+router.get("/client/appointments", controller.getClientAppointments);
+router.post("/client/appointments", controller.bookClientAppointment);
+router.get("/client/invoices", controller.getClientInvoices);
 
 // Student Routes
-router.get("/student/schedule", asyncHandler(controller.getStudentSchedule));
-router.get("/student/progress", asyncHandler(controller.getStudentProgress));
-router.get("/student/certificates", asyncHandler(controller.getStudentCertificates));
+router.get("/student/schedule", controller.getStudentSchedule);
+router.get("/student/progress", controller.getStudentProgress);
+router.get("/student/certificates", controller.getStudentCertificates);
 
 export default router;
