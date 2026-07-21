@@ -303,7 +303,7 @@ async function seedMore() {
       await Notification.create({
         municipalityId: municipality._id,
         recipientId: adminUser._id,
-        title: "Welcome to PalikaOS",
+        title: "Welcome to BeautyStudio OS",
         body: "Your account has been created successfully.",
         channel: "in-app",
         type: "system",

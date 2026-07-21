@@ -16,7 +16,7 @@ async function start() {
   initSocket(server);
 
   server.listen(env.PORT, () => {
-    logger.info(`PalikaOS API started on port ${env.PORT}`);
+    logger.info(`BeautyStudio OS API started on port ${env.PORT}`);
     logger.info(`Environment: ${env.NODE_ENV}`);
     logger.info(`Health: http://localhost:${env.PORT}/health`);
     logger.info(`API: http://localhost:${env.PORT}/api/v1`);

@@ -1,5 +1,5 @@
 /**
- * Database Seed — Run once to bootstrap PalikaOS
+ * Database Seed — Run once to bootstrap BeautyStudio OS
  * Usage: npx ts-node src/utils/seed.ts
  */
 import mongoose from "mongoose";
@@ -156,15 +156,15 @@ export const SYSTEM_ROLES = [
 
 async function seed() {
   await connectDatabase();
-  console.log("Seeding PalikaOS...");
+  console.log("Seeding BeautyStudio OS...");
 
   // Municipality
-  let municipality = await Municipality.findOne({ code: "PALIKAOS" });
+  let municipality = await Municipality.findOne({ code: "BEAUTYSTUDIOOS" });
   if (!municipality) {
     municipality = await Municipality.create({
-      name: "PalikaOS Rural Municipality",
+      name: "BeautyStudio OS Demo Studio",
       nameNp: "पालता गाउँपालिका",
-      code: "PALIKAOS",
+      code: "BEAUTYSTUDIOOS",
       subdomain: "demo",
       district: "Kalikot",
       province: "Karnali Province",
@@ -467,7 +467,7 @@ async function seed() {
       await Notification.create({
         municipalityId: municipality._id,
         recipientId: adminUser._id,
-        title: "Welcome to PalikaOS",
+        title: "Welcome to BeautyStudio OS",
         body: "Your account has been created successfully.",
         channel: "in-app",
         type: "system",

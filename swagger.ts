@@ -3,9 +3,9 @@ import swaggerAutogen from "swagger-autogen";
 const doc = {
   openapi: "3.1.0",
   info: {
-    title: "PalikaOS API",
+    title: "BeautyStudio OS API",
     version: "1.0.0",
-    description: "API documentation for the PalikaOS."
+    description: "API documentation for the BeautyStudio OS."
   },
   servers: [
     {

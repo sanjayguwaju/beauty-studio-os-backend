@@ -22,7 +22,7 @@ export async function generateSifaris(req: AuthRequest, res: Response) {
 
     const municipality = await Municipality.findById(req.user.municipalityId);
     if (!municipality) {
-      return sendError(res, 404, "Municipality not found");
+      return sendError(res, 404, "Tenant not found");
     }
 
     const user = await User.findById(req.user.id).populate("wardId");

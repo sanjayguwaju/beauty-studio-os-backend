@@ -38,7 +38,7 @@ export async function login(req: AuthRequest, res: Response) {
   if (subdomain) {
     const municipality = await Municipality.findOne({ subdomain });
     if (!municipality) {
-      return sendError(res, 404, "Municipality not found");
+      return sendError(res, 404, "Tenant not found");
     }
     if (municipality.status !== "approved") {
       return sendError(res, 403, "Your workspace is pending administration approval.");
@@ -217,7 +217,7 @@ export async function forgotPassword(req: Request, res: Response) {
 
   await sendEmail({
     to: user.email,
-    subject: "Password Reset Request - PalikaOS",
+    subject: "Password Reset Request - BeautyStudio OS",
     html: message
   });
 

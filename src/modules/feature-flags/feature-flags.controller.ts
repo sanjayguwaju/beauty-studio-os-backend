@@ -4,26 +4,21 @@ import { FeatureFlag } from "../../models/FeatureFlag";
 import { sendSuccess, sendError } from "../../utils/response";
 
 export const SYSTEM_FEATURE_FLAGS = [
-  { key: "citizen_portal", name: "Citizen Portal", description: "Enable the public citizen portal", isSystemFlag: true },
-  { key: "online_payment", name: "Online Payment", description: "Enable online tax payment", isSystemFlag: true },
-  { key: "sms_notifications", name: "SMS Notifications", description: "Send SMS alerts to citizens", isSystemFlag: true },
-  { key: "property_tax", name: "Property Tax", description: "Property tax collection module", isSystemFlag: true },
-  { key: "grievance_system", name: "Grievance System", description: "Citizen grievance and complaint handling", isSystemFlag: true },
-  { key: "sifaris_module", name: "Sifaris Module", description: "Digital recommendation letters issuance", isSystemFlag: true },
-  { key: "ward_dashboard", name: "Ward Dashboard", description: "Dedicated dashboard for ward offices", isSystemFlag: true },
-  { key: "vital_events", name: "Vital Events", description: "Birth, death, marriage registration", isSystemFlag: true },
-  { key: "health_post", name: "Health Post", description: "Health post and clinic management", isSystemFlag: true },
-  { key: "school_management", name: "School Management", description: "Public school monitoring module", isSystemFlag: true },
-  { key: "infrastructure", name: "Infrastructure", description: "Infrastructure projects tracking", isSystemFlag: true },
-  { key: "livestock", name: "Livestock & Agri", description: "Agriculture and livestock management", isSystemFlag: true },
-  { key: "digital_notice", name: "Digital Notice Board", description: "Digital public announcements", isSystemFlag: true },
-  { key: "inventory", name: "Inventory Management", description: "Internal municipal inventory tracking", isSystemFlag: true },
-  { key: "disaster_mgmt", name: "Disaster Mgmt", description: "Disaster and relief management", isSystemFlag: true },
-  { key: "citizen_charter", name: "Citizen Charter", description: "Digital citizen charter display", isSystemFlag: true },
-  { key: "e_attendance", name: "E-Attendance", description: "Staff electronic attendance", isSystemFlag: true },
-  { key: "budget_allocation", name: "Budget Allocation", description: "Budget tracking and allocation", isSystemFlag: true },
-  { key: "waste_management", name: "Waste Management", description: "Waste collection tracking", isSystemFlag: true },
-  { key: "business_registration", name: "Business Reg.", description: "Local business registration module", isSystemFlag: true }
+  { key: "client_portal", name: "Client Portal", description: "Enable the public client self-service portal", isSystemFlag: true },
+  { key: "online_payment", name: "Online Payment", description: "Enable online invoice payment via Stripe or eSewa", isSystemFlag: true },
+  { key: "sms_notifications", name: "SMS Notifications", description: "Send SMS alerts to clients and students", isSystemFlag: true },
+  { key: "academy", name: "Academy Module", description: "Course builder, batches, enrollment, and attendance tracking", isSystemFlag: true },
+  { key: "ai", name: "AI Layer", description: "AI-powered OCR intake and service recommendations", isSystemFlag: true },
+  { key: "certifications", name: "Certifications", description: "Student certification rules, progress tracking, and certificate issuance", isSystemFlag: true },
+  { key: "pos_billing", name: "POS & Billing", description: "Point-of-sale checkout, invoicing, and commission tracking", isSystemFlag: true },
+  { key: "inventory", name: "Inventory Management", description: "Product stock tracking and usage deductions per appointment", isSystemFlag: true },
+  { key: "staff_commissions", name: "Staff Commissions", description: "Per-service commission calculation and reporting", isSystemFlag: true },
+  { key: "multi_branch", name: "Multi-Branch", description: "Manage multiple studio branches under one tenant", isSystemFlag: true },
+  { key: "student_portal", name: "Student Portal", description: "Dedicated portal for academy students to view schedule and progress", isSystemFlag: true },
+  { key: "webhooks", name: "Webhooks", description: "Dispatch webhook events to external systems on key actions", isSystemFlag: true },
+  { key: "analytics", name: "Analytics & Reports", description: "Revenue KPIs, staff performance, and export capabilities", isSystemFlag: true },
+  { key: "loyalty_program", name: "Loyalty Program", description: "Client loyalty points and rewards tracking", isSystemFlag: true },
+  { key: "e_attendance", name: "E-Attendance", description: "Staff and student digital attendance system", isSystemFlag: true },
 ];
 
 import { tenantContext } from "../../utils/tenantContext";

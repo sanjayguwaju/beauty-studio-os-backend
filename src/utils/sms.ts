@@ -15,7 +15,7 @@ export async function sendSMS(to: string, message: string): Promise<boolean> {
 
     const response = await axios.post(smsUrl, {
       token: smsToken,
-      from: "PalikaOS",
+      from: "BeautyStudio OS",
       to,
       text: message
     });

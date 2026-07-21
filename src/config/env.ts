@@ -4,7 +4,7 @@ dotenv.config();
 export const env = {
   NODE_ENV: process.env.NODE_ENV ?? "development",
   PORT: parseInt(process.env.PORT ?? "4000", 10),
-  MONGODB_URI: process.env.MONGODB_URI ?? "mongodb://localhost:27017/palikaos",
+  MONGODB_URI: process.env.MONGODB_URI ?? "mongodb://localhost:27017/beautystudioos",
   JWT_SECRET: process.env.JWT_SECRET ?? "change-me-secret",
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ?? "change-me-refresh",
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "15m",

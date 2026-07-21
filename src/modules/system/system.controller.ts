@@ -163,7 +163,7 @@ export async function getTenantBranding(req: Request, res: Response) {
 export async function updateTenantSettings(req: AuthRequest, res: Response) {
   try {
     if (!req.user || !req.user.roles.includes("municipality_admin")) {
-      return sendError(res, 403, "Forbidden: Only Municipality Admins can update settings");
+      return sendError(res, 403, "Forbidden: Only Studio Admins can update settings");
     }
 
     const { logoUrl, primaryColor, name } = req.body;

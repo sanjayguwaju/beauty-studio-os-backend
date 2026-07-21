@@ -117,7 +117,7 @@ app.get("/health", async (_req, res) => {
   res.json({ 
     status, 
     message,
-    service: "palika-os-api", 
+    service: "beauty-studio-os-api", 
     timestamp: new Date().toISOString(),
     dependencies: {
       database: {

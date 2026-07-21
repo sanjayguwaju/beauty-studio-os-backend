@@ -15,7 +15,7 @@ export async function sendEmail(options: { to: string; subject: string; html: st
     });
 
     const mailOptions = {
-      from: `"PalikaOS" <${env.SMTP_USER}>`,
+      from: `"BeautyStudio OS" <${env.SMTP_USER}>`,
       to: options.to,
       subject: options.subject,
       text: options.text,
