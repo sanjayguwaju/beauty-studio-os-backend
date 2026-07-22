@@ -7,8 +7,11 @@ export const redis = env.REDIS_URL
   : new IORedis({
       host: env.REDIS_HOST,
       port: env.REDIS_PORT,
+      username: env.REDIS_USERNAME,
+      password: env.REDIS_PASSWORD,
       maxRetriesPerRequest: null,
       lazyConnect: true,
+      tls: env.REDIS_HOST && env.REDIS_HOST !== '127.0.0.1' && env.REDIS_HOST !== 'localhost' ? {} : undefined
     });
 
 redis.on("connect", () => logger.info("Redis connected"));
