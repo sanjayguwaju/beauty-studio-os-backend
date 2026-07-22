@@ -75,7 +75,34 @@ app.use(helmet({
     },
   },
 }));
-app.use(cors({ origin: env.ALLOWED_ORIGINS, credentials: true }));
+app.use(cors({ 
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    // Check exact match
+    if (env.ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    
+    // Check if it's a subdomain of any allowed origin
+    for (const allowedOrigin of env.ALLOWED_ORIGINS) {
+      try {
+        const allowedUrl = new URL(allowedOrigin);
+        const originUrl = new URL(origin);
+        
+        // e.g., origin: studio1.beautyxos.netlify.app, allowed: beautyxos.netlify.app
+        if (originUrl.hostname.endsWith(`.${allowedUrl.hostname}`) || originUrl.hostname === allowedUrl.hostname) {
+          return callback(null, true);
+        }
+      } catch (e) {
+        // invalid URL format, ignore
+      }
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  }, 
+  credentials: true 
+}));
 app.use(compression());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));

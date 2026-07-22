@@ -5,6 +5,8 @@ import { Enrollment } from '../../models/Enrollment';
 import { Invoice } from '../../models/Invoice';
 import { Commission } from '../../models/Commission';
 import { Campaign } from '../../models/Campaign';
+import { ServiceCatalog } from '../../models/ServiceCatalog';
+import { Branch } from '../../models/Branch';
 
 export async function seedBeautyStudio(municipality: any) {
   console.log('💅 Seeding Beauty Studio Data...');
@@ -55,49 +57,75 @@ export async function seedBeautyStudio(municipality: any) {
 
   console.log('✅ Created Beauty Studio People (Staff, Clients, Students).');
 
+  // 3.5 Create Services
+  const service1 = await ServiceCatalog.create({
+    tenantId,
+    category: 'hair',
+    name: 'Premium Haircut',
+    durationMinutes: 60,
+    priceSolo: 150,
+    active: true
+  });
+
+  const service2 = await ServiceCatalog.create({
+    tenantId,
+    category: 'hair',
+    name: 'Balayage Color',
+    durationMinutes: 120,
+    priceSolo: 250,
+    active: true
+  });
+
+  // Get a branch
+  const branch = await Branch.findOne({ tenantId });
+  if (!branch) throw new Error('No branch found for seeding appointments');
+
   // 4. Create Appointments
   const today = new Date();
   const pastAppt = await Appointment.create({
     tenantId,
+    branchId: branch._id,
     clientPersonId: client1._id,
-    services: [{ name: 'Premium Haircut', durationMinutes: 60 }],
-    startTime: new Date(today.getTime() - 86400000), // Yesterday
-    endTime: new Date(today.getTime() - 82800000),
+    serviceId: service1._id,
+    practitionerPersonId: staff1._id,
+    practitionerRole: 'stylist',
+    scheduledStart: new Date(today.getTime() - 86400000), // Yesterday
+    scheduledEnd: new Date(today.getTime() - 82800000),
     status: 'completed',
-    notes: 'Client loved the layers'
   });
 
   const upcomingAppt = await Appointment.create({
     tenantId,
+    branchId: branch._id,
     clientPersonId: client2._id,
-    services: [{ name: 'Balayage Color', durationMinutes: 120 }],
-    startTime: new Date(today.getTime() + 86400000), // Tomorrow
-    endTime: new Date(today.getTime() + 93600000),
-    status: 'pending',
-    notes: 'First time coloring'
+    serviceId: service2._id,
+    practitionerPersonId: staff2._id,
+    practitionerRole: 'stylist',
+    scheduledStart: new Date(today.getTime() + 86400000), // Tomorrow
+    scheduledEnd: new Date(today.getTime() + 93600000),
+    status: 'booked',
   });
-
-  console.log('✅ Created Appointments.');
 
   // 5. Create Invoices
   const inv1 = await Invoice.create({
     tenantId,
+    branchId: branch._id,
     clientOrStudentPersonId: client1._id,
+    appointmentId: pastAppt._id,
     type: 'service',
-    amount: 150,
+    totalAmount: 150,
     status: 'paid',
-    paymentMethod: 'card',
-    items: [{ description: 'Premium Haircut', quantity: 1, unitPrice: 150, total: 150 }]
+    lineItems: [{ description: 'Premium Haircut', amount: 150 }]
   });
 
   const inv2 = await Invoice.create({
     tenantId,
+    branchId: branch._id,
     clientOrStudentPersonId: student1._id,
-    type: 'academy',
-    amount: 800,
-    status: 'pending',
-    paymentMethod: 'cash',
-    items: [{ description: 'Bridal Masterclass', quantity: 1, unitPrice: 800, total: 800 }]
+    type: 'course_fee',
+    totalAmount: 800,
+    status: 'unpaid',
+    lineItems: [{ description: 'Bridal Masterclass', amount: 800 }]
   });
 
   console.log('✅ Created Invoices.');

@@ -14,7 +14,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/beauty_studio_os
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=your_super_secret_jwt_key
-      - ALLOWED_ORIGINS=https://your-frontend-domain.com
+      - ALLOWED_ORIGINS=https://beautyxos.netlify.app
     depends_on:
       - mongo
       - redis
