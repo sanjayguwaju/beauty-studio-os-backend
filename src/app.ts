@@ -18,6 +18,7 @@ import { apiReference } from "@scalar/express-api-reference";
 import openapiSpec from "./docs/openapi.json";
 
 // Routes
+import loyaltyRoutes from "./modules/loyalty/loyalty.routes";
 import publicRoutes from "./modules/public/public.routes";
 import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/users.routes";
@@ -147,6 +148,7 @@ v1.use("/marketing",         marketingRoutes);
 v1.use("/correspondence",    correspondenceRoutes);
 v1.use("/service-requests",  serviceRequestRoutes);
 v1.use("/registration",      registrationRoutes);
+v1.use("/loyalty",           loyaltyRoutes);
 v1.use("/public",            publicRoutes);
 v1.use("/complaints",        complaintRoutes);
 

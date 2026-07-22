@@ -2,6 +2,8 @@ import { Response } from "express";
 import { AuthRequest } from "../../types";
 import { Invoice } from "../../models/Invoice";
 import { Commission } from "../../models/Commission";
+import { Person } from "../../models/Person";
+import { LoyaltyTransaction } from "../../models/LoyaltyTransaction";
 import { sendSuccess, sendError } from "../../utils/response";
 import { generatePdfFromHtml } from "../../utils/pdfGenerator";
 import { generateInvoiceHtml, InvoiceData } from "../../templates/pdf/invoice";
@@ -44,12 +46,31 @@ export async function posCheckout(req: AuthRequest, res: Response) {
   try {
     const tenantId = req.user!.tenantId || req.user!.municipalityId;
     const branchId = req.user!.branchId || req.body.branchId;
-    const { clientPersonId, lineItems, paymentMethod } = req.body;
+    const { clientPersonId, lineItems, paymentMethod, redeemPoints } = req.body;
 
     // Calculate totals
     const subtotal = lineItems.reduce((acc: number, item: any) => acc + (item.amount * item.quantity), 0);
     const tax = subtotal * 0.13; // 13% tax
-    const totalAmount = subtotal + tax;
+    let totalAmount = subtotal + tax;
+
+    let discount = 0;
+    let client = null;
+
+    if (clientPersonId) {
+      client = await Person.findOne({ _id: clientPersonId, tenantId });
+      
+      // Loyalty Redemption Logic (100 points = $1 discount)
+      if (client && redeemPoints > 0) {
+        if (client.loyaltyPoints < redeemPoints) {
+          return sendError(res, 400, "Insufficient loyalty points");
+        }
+        discount = redeemPoints / 100;
+        
+        // Ensure discount doesn't exceed total
+        if (discount > totalAmount) discount = totalAmount;
+        totalAmount -= discount;
+      }
+    }
 
     // We map standard quantities to total item amount in ILineItem (which only expects amount/description)
     const dbLineItems = lineItems.map((item: any) => ({
@@ -57,15 +78,53 @@ export async function posCheckout(req: AuthRequest, res: Response) {
       amount: item.amount * item.quantity
     }));
 
+    if (discount > 0) {
+      dbLineItems.push({
+        description: `Loyalty Points Redemption (${redeemPoints} pts)`,
+        amount: -discount
+      });
+    }
+
     const invoice = await Invoice.create({
       tenantId,
       branchId,
       type: "service",
-      clientOrStudentPersonId: clientPersonId || null, // Allow null for walk-ins if schema permits, else handle dummy user
+      clientOrStudentPersonId: clientPersonId || null, 
       lineItems: dbLineItems,
       totalAmount,
       status: "paid" // POS assumes paid immediately
     });
+
+    // Handle Loyalty Point deduction & awarding
+    if (client) {
+      if (redeemPoints > 0) {
+        client.loyaltyPoints -= redeemPoints;
+        await LoyaltyTransaction.create({
+          tenantId,
+          personId: client._id,
+          type: 'redeem',
+          points: redeemPoints,
+          description: `Redeemed for $${discount.toFixed(2)} discount`,
+          relatedInvoiceId: invoice._id
+        });
+      }
+
+      // Earn points based on final total ($1 = 1 pt)
+      const earnedPoints = Math.floor(totalAmount);
+      if (earnedPoints > 0) {
+        client.loyaltyPoints += earnedPoints;
+        await LoyaltyTransaction.create({
+          tenantId,
+          personId: client._id,
+          type: 'earn',
+          points: earnedPoints,
+          description: `Earned from POS Purchase`,
+          relatedInvoiceId: invoice._id
+        });
+      }
+
+      await client.save();
+    }
 
     return sendSuccess(res, invoice, "Checkout successful", 201);
   } catch (error) {

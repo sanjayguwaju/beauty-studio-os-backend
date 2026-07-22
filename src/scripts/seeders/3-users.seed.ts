@@ -16,7 +16,7 @@ export async function seedUsers(municipality: IMunicipality) {
   }
 
   // 1. Super Admin
-  const adminEmail = 'admin@demo.gov.np';
+  const adminEmail = 'admin@demo.beautyos.com';
   let admin = await User.findOne({ email: adminEmail });
   
   if (!admin) {
@@ -38,7 +38,7 @@ export async function seedUsers(municipality: IMunicipality) {
   const wards = await Ward.find({ municipalityId: municipality._id });
   
   for (const ward of wards) {
-    const wardEmail = `ward${ward.wardNumber}@demo.gov.np`;
+    const wardEmail = `ward${ward.wardNumber}@demo.beautyos.com`;
     const existing = await User.findOne({ email: wardEmail });
     
     if (!existing) {

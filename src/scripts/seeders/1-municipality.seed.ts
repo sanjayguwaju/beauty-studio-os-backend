@@ -18,7 +18,7 @@ export async function seedMunicipalities() {
       province: 'Bagmati',
       type: 'urban',
       totalWards: 5,
-      contactEmail: 'info@demo.gov.np',
+      contactEmail: 'info@demo.beautyos.com',
       contactPhone: generateNepaliPhone(),
       address: 'Kathmandu, Nepal',
       status: 'approved',

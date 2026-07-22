@@ -10,6 +10,7 @@ export interface IPerson extends Document {
   password?: string; // Optional if using auth0 or OTP only
   image?: string;
   isActive: boolean;
+  loyaltyPoints: number;
   refreshToken?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -26,6 +27,7 @@ const personSchema = new Schema<IPerson>(
     password: { type: String, select: false },
     image: String,
     isActive: { type: Boolean, default: true },
+    loyaltyPoints: { type: Number, default: 0 },
     refreshToken: { type: String, select: false },
   },
   { timestamps: true },
