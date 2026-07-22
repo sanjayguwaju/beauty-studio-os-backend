@@ -11,7 +11,7 @@ export const createUserValidation = [
   body("email").isEmail().normalizeEmail(),
   body("password").isLength({ min: 8 }),
   body("roleIds").isArray({ min: 1 }),
-  body("wardId").optional().isMongoId(),
+  body("branchId").optional().isMongoId(),
 ];
 
 export async function listUsers(req: AuthRequest, res: Response) {
@@ -19,7 +19,7 @@ export async function listUsers(req: AuthRequest, res: Response) {
   const pageSize = parseInt(req.query.pageSize as string ?? "20");
   const search = req.query.search as string;
 
-  const filter: Record<string, unknown> = { municipalityId: req.user!.municipalityId };
+  const filter: Record<string, unknown> = { tenantId: req.user!.tenantId };
   if (search) filter.$or = [
     { name: { $regex: search, $options: "i" } },
     { email: { $regex: search, $options: "i" } },
@@ -34,7 +34,7 @@ export async function listUsers(req: AuthRequest, res: Response) {
 }
 
 export async function createUser(req: AuthRequest, res: Response) {
-  const { name, email, password, roleIds, wardId, designation, employeeId, phone, nameNp } = req.body;
+  const { name, email, password, roleIds, branchId, designation, employeeId, phone, nameNp } = req.body;
 
   const existing = await User.findOne({ email });
   if (existing) return sendError(res, 409, "Email already in use");
@@ -44,8 +44,8 @@ export async function createUser(req: AuthRequest, res: Response) {
 
   const user = await User.create({
     name, email, password, nameNp, phone, designation, employeeId,
-    municipalityId: req.user!.municipalityId,
-    wardId: wardId || undefined,
+    tenantId: req.user!.tenantId,
+    branchId: branchId || undefined,
     roles: roleIds,
     rolesSlugs,
   });
@@ -56,7 +56,7 @@ export async function createUser(req: AuthRequest, res: Response) {
 export async function getUser(req: AuthRequest, res: Response) {
   const user = await User.findOne({
     _id: req.params.id,
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
   }).populate("roles", "name slug permissions");
   if (!user) return sendError(res, 404, "User not found");
   return sendSuccess(res, user);
@@ -64,7 +64,7 @@ export async function getUser(req: AuthRequest, res: Response) {
 
 export async function updateUser(req: AuthRequest, res: Response) {
   const user = await User.findOneAndUpdate(
-    { _id: req.params.id, municipalityId: req.user!.municipalityId },
+    { _id: req.params.id, tenantId: req.user!.tenantId },
     { $set: req.body },
     { new: true },
   );
@@ -74,7 +74,7 @@ export async function updateUser(req: AuthRequest, res: Response) {
 
 export async function deactivateUser(req: AuthRequest, res: Response) {
   const user = await User.findOneAndUpdate(
-    { _id: req.params.id, municipalityId: req.user!.municipalityId },
+    { _id: req.params.id, tenantId: req.user!.tenantId },
     { isActive: false },
     { new: true },
   );
@@ -86,7 +86,7 @@ export async function uploadProfileImage(req: AuthRequest, res: Response) {
   if (!req.file) return sendError(res, 400, "No image file provided");
   const imageUrl = `/uploads/profiles/${req.file.filename}`;
   const user = await User.findOneAndUpdate(
-    { _id: req.params.id, municipalityId: req.user!.municipalityId },
+    { _id: req.params.id, tenantId: req.user!.tenantId },
     { image: imageUrl },
     { new: true }
   );

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ISubscription extends Document {
-  municipalityId: mongoose.Types.ObjectId;
+  tenantId: mongoose.Types.ObjectId;
   planName: string;
   status: "active" | "past_due" | "canceled" | "trial";
   startDate: Date;
@@ -11,7 +11,7 @@ export interface ISubscription extends Document {
 
 const SubscriptionSchema: Schema = new Schema(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     planName: { type: String, required: true },
     status: { type: String, enum: ["active", "past_due", "canceled", "trial"], default: "trial" },
     startDate: { type: Date, required: true },

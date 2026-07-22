@@ -15,7 +15,7 @@ export async function getTaxRules(req: AuthRequest, res: Response) {
 export async function createTaxRule(req: AuthRequest, res: Response) {
   try {
     const rule = await TaxRule.create({
-      municipalityId: req.user!.municipalityId,
+      tenantId: req.user!.tenantId,
       ...req.body,
     });
     return sendSuccess(res, rule, "Tax rule created successfully", 201);

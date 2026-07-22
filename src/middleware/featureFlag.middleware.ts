@@ -6,9 +6,9 @@ import { sendError } from "../utils/response";
 export const requireFeature = (featureKey: string) => {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const municipalityId = req.user?.municipalityId;
+      const tenantId = req.user?.tenantId;
       const query: any = { key: featureKey };
-      if (municipalityId) query.municipalityId = municipalityId;
+      if (tenantId) query.tenantId = tenantId;
 
       const flag = await FeatureFlag.findOne(query);
       
@@ -23,13 +23,13 @@ export const requireFeature = (featureKey: string) => {
       }
 
       // If it has specific wards enabled, and the user's ward is not in the list, block
-      // Admin users might not have a wardId, so we let them bypass ward checks if needed, 
-      // or we can strictly enforce it. Let's strictly enforce if enabledWards has entries and user is in a ward.
-      if (flag.enabledWards.length > 0) {
-        const userWardId = req.user?.wardId;
-        if (userWardId) {
-          const isEnabledForUserWard = flag.enabledWards.some((wardId) => wardId.toString() === userWardId.toString());
-          if (!isEnabledForUserWard) {
+      // Admin users might not have a branchId, so we let them bypass ward checks if needed, 
+      // or we can strictly enforce it. Let's strictly enforce if enabledBranchs has entries and user is in a ward.
+      if (flag.enabledBranchs.length > 0) {
+        const userBranchId = req.user?.branchId;
+        if (userBranchId) {
+          const isEnabledForUserBranch = flag.enabledBranchs.some((branchId) => branchId.toString() === userBranchId.toString());
+          if (!isEnabledForUserBranch) {
             return sendError(res, 403, `Feature '${featureKey}' is not enabled for your ward.`);
           }
         }

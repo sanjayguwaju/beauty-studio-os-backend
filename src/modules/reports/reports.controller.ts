@@ -7,7 +7,7 @@ import { Certificate } from "../../models/Certificate";
 import { sendSuccess, sendError } from "../../utils/response";
 
 export async function getKPIs(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { startDate, endDate } = req.query;
 
   const dateFilter: any = {};
@@ -66,7 +66,7 @@ export async function getKPIs(req: AuthRequest, res: Response) {
 }
 
 export async function exportReport(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { type, startDate, endDate } = req.query;
 
   const dateFilter: any = {};

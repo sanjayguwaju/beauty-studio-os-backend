@@ -1,5 +1,5 @@
 import { initSeeder, closeSeeder } from './utils';
-import { seedMunicipalities } from './1-municipality.seed';
+import { seedTenants } from './1-tenant.seed';
 import { seedRoles } from './2-roles.seed';
 import { seedUsers } from './3-users.seed';
 import { seedBeautyStudio } from './10-beautystudio.seed';
@@ -16,12 +16,12 @@ async function runSeeders() {
     await initSeeder(clearDB);
 
     // 1. Foundation
-    const municipality = await seedMunicipalities();
-    await seedRoles(municipality);
-    await seedUsers(municipality);
+    const tenant = await seedTenants();
+    await seedRoles(tenant);
+    await seedUsers(tenant);
 
     // 2. Core Modules (Beauty Studio)
-    await seedBeautyStudio(municipality);
+    await seedBeautyStudio(tenant);
 
     console.log('🎉 All seeding completed successfully!');
   } catch (error) {

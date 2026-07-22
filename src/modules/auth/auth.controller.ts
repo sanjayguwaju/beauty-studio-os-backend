@@ -8,7 +8,7 @@ import { Role } from "../../models/Role";
 import { sendSuccess, sendError } from "../../utils/response";
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from "../../utils/jwt";
 import { AuditLog } from "../../models/AuditLog";
-import { Municipality } from "../../models/Municipality";
+import { Tenant } from "../../models/Tenant";
 import { sendEmail } from "../../utils/email";
 import { env } from "../../config/env";
 import { getCachedPermissionsForRoles } from "./auth.service";
@@ -34,22 +34,22 @@ export async function login(req: AuthRequest, res: Response) {
   const { email, password, rememberMe } = req.body;
   const subdomain = req.headers["x-tenant-subdomain"] as string;
 
-  let tenantMunicipalityId: any = null;
+  let tenantTenantId: any = null;
   if (subdomain) {
-    const municipality = await Municipality.findOne({ subdomain });
+    const municipality = await Tenant.findOne({ subdomain });
     if (!municipality) {
       return sendError(res, 404, "Tenant not found");
     }
     if (municipality.status !== "approved") {
       return sendError(res, 403, "Your workspace is pending administration approval.");
     }
-    tenantMunicipalityId = municipality._id;
+    tenantTenantId = municipality._id;
   }
 
   const user = await User.findOne({ email, isActive: true }).select("+password");
   if (!user) return sendError(res, 401, "Invalid credentials");
 
-  if (tenantMunicipalityId && user.municipalityId.toString() !== tenantMunicipalityId.toString()) {
+  if (tenantTenantId && user.tenantId.toString() !== tenantTenantId.toString()) {
     return sendError(res, 401, "User does not belong to this municipality");
   }
 
@@ -70,8 +70,8 @@ export async function login(req: AuthRequest, res: Response) {
     id: user._id.toString(),
     email: user.email,
     name: user.name,
-    municipalityId: user.municipalityId.toString(),
-    wardId: user.wardId?.toString(),
+    tenantId: user.tenantId.toString(),
+    branchId: user.branchId?.toString(),
     roles: user.rolesSlugs,
     permissions,
   };
@@ -84,7 +84,7 @@ export async function login(req: AuthRequest, res: Response) {
   await user.save();
 
   await AuditLog.create({
-    municipalityId: user.municipalityId,
+    tenantId: user.tenantId,
     actorId: user._id,
     actorEmail: user.email,
     module: "auth",
@@ -128,8 +128,8 @@ export async function refresh(req: AuthRequest, res: Response) {
       id: user._id.toString(),
       email: user.email,
       name: user.name,
-      municipalityId: user.municipalityId.toString(),
-      wardId: user.wardId?.toString(),
+      tenantId: user.tenantId.toString(),
+      branchId: user.branchId?.toString(),
       roles: user.rolesSlugs,
       permissions,
     };
@@ -174,8 +174,8 @@ export async function me(req: AuthRequest, res: Response) {
     id: user._id?.toString(),
     email: user.email,
     name: user.name,
-    municipalityId: user.municipalityId?.toString(),
-    wardId: user.wardId?.toString(),
+    tenantId: user.tenantId?.toString(),
+    branchId: user.branchId?.toString(),
     roles: user.rolesSlugs,
     permissions,
   };
@@ -251,7 +251,7 @@ export async function resetPassword(req: Request, res: Response) {
   await user.save();
 
   await AuditLog.create({
-    municipalityId: user.municipalityId,
+    tenantId: user.tenantId,
     actorId: user._id,
     actorEmail: user.email,
     module: "auth",
@@ -328,8 +328,7 @@ export async function verifyOtp(req: Request, res: Response) {
     email: person.email,
     phone: person.phone,
     name: person.fullName,
-    municipalityId: person.tenantId?.toString() || "", // legacy fallback
-    tenantId: person.tenantId?.toString(),
+    tenantId: person.tenantId?.toString() || "",
     roles: rolesSlugs as any,
     roleAssignments: roleAssignments.map((ra: any) => ({
       tenantId: ra.tenantId.toString(),

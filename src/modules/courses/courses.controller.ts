@@ -15,7 +15,7 @@ export async function listCourses(req: AuthRequest, res: Response) {
   const { search } = req.query;
 
   const filter: Record<string, unknown> = {
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   };
 
   if (search) {
@@ -37,7 +37,7 @@ export async function createCourse(req: AuthRequest, res: Response) {
 
   const course = await Course.create({
     ...req.body,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   return sendSuccess(res, course, "Course created", 201);
@@ -46,7 +46,7 @@ export async function createCourse(req: AuthRequest, res: Response) {
 export async function getCourse(req: AuthRequest, res: Response) {
   const course = await Course.findOne({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   if (!course) return sendError(res, 404, "Course not found");
@@ -75,7 +75,7 @@ export async function updateCourse(req: AuthRequest, res: Response) {
   }
 
   const course = await Course.findOneAndUpdate(
-    { _id: req.params.id, tenantId: req.user!.tenantId || req.user!.municipalityId },
+    { _id: req.params.id, tenantId: req.user!.tenantId || req.user!.tenantId },
     { $set: req.body },
     { new: true }
   );
@@ -92,7 +92,7 @@ export async function deleteCourse(req: AuthRequest, res: Response) {
 
   const course = await Course.findOneAndDelete({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   if (!course) return sendError(res, 404, "Course not found");
@@ -113,7 +113,7 @@ export async function createModule(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
   const { courseId, name, sequenceOrder } = req.body;
-  const course = await Course.findOne({ _id: courseId, tenantId: req.user!.tenantId || req.user!.municipalityId });
+  const course = await Course.findOne({ _id: courseId, tenantId: req.user!.tenantId || req.user!.tenantId });
   if (!course) return sendError(res, 404, "Course not found");
 
   const mod = await CourseModule.create({ courseId, name, sequenceOrder });

@@ -1,8 +1,8 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IServiceRequest extends Document {
-  municipalityId: Types.ObjectId;
-  wardId?: Types.ObjectId;
+  tenantId: Types.ObjectId;
+  branchId?: Types.ObjectId;
   trackingNumber: string;
   serviceType: string;
   citizenId?: Types.ObjectId;
@@ -23,8 +23,8 @@ export interface IServiceRequest extends Document {
 
 const serviceRequestSchema = new Schema<IServiceRequest>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
-    wardId: { type: Schema.Types.ObjectId, ref: "Ward" },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
+    branchId: { type: Schema.Types.ObjectId, ref: "Branch" },
     trackingNumber: { type: String, required: true, unique: true },
     serviceType: { type: String, required: true },
     citizenId: { type: Schema.Types.ObjectId, ref: "Citizen" },
@@ -49,7 +49,7 @@ const serviceRequestSchema = new Schema<IServiceRequest>(
   { timestamps: true },
 );
 
-serviceRequestSchema.index({ municipalityId: 1, status: 1 });
+serviceRequestSchema.index({ tenantId: 1, status: 1 });
 serviceRequestSchema.index({ trackingNumber: 1 });
 
 export const ServiceRequest = model<IServiceRequest>("ServiceRequest", serviceRequestSchema);

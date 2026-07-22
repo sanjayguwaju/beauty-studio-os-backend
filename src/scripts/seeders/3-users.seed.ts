@@ -1,17 +1,16 @@
 import { User } from '../../models/User';
 import { Role } from '../../models/Role';
-import { Ward } from '../../models/Ward';
-import { IMunicipality } from '../../models/Municipality';
-import { SystemRole } from '../../types';
+import { Branch } from '../../models/Branch';
+import { ITenant } from '../../models/Tenant';
 import { generateNepaliPhone } from './utils';
 
-export async function seedUsers(municipality: IMunicipality) {
+export async function seedUsers(tenant: ITenant) {
   console.log('👤 Seeding Users...');
 
-  const superAdminRole = await Role.findOne({ municipalityId: municipality._id, slug: 'superadmin' });
-  const wardOfficerRole = await Role.findOne({ municipalityId: municipality._id, slug: 'ward_officer' });
+  const superAdminRole = await Role.findOne({ tenantId: tenant._id, slug: 'superadmin' });
+  const branchManagerRole = await Role.findOne({ tenantId: tenant._id, slug: 'branch_manager' });
   
-  if (!superAdminRole || !wardOfficerRole) {
+  if (!superAdminRole || !branchManagerRole) {
     throw new Error('Roles not found. Run roles seeder first.');
   }
 
@@ -21,7 +20,7 @@ export async function seedUsers(municipality: IMunicipality) {
   
   if (!admin) {
     await User.create({
-      municipalityId: municipality._id,
+      tenantId: tenant._id,
       name: 'System Administrator',
       nameNp: 'प्रणाली प्रशासक',
       email: adminEmail,
@@ -30,30 +29,31 @@ export async function seedUsers(municipality: IMunicipality) {
       roles: [superAdminRole._id],
       rolesSlugs: ['superadmin'],
       isActive: true,
-      designation: 'IT Officer'
+      designation: 'Studio Owner'
     });
   }
 
-  // 2. Ward Officers
-  const wards = await Ward.find({ municipalityId: municipality._id });
+  // 2. Branch Managers
+  const branches = await Branch.find({ tenantId: tenant._id });
   
-  for (const ward of wards) {
-    const wardEmail = `ward${ward.wardNumber}@demo.beautyos.com`;
-    const existing = await User.findOne({ email: wardEmail });
+  for (let i = 0; i < branches.length; i++) {
+    const branch = branches[i];
+    const branchEmail = `branch${i+1}@demo.beautyos.com`;
+    const existing = await User.findOne({ email: branchEmail });
     
     if (!existing) {
       await User.create({
-        municipalityId: municipality._id,
-        wardId: ward._id,
-        name: `Ward ${ward.wardNumber} Officer`,
-        nameNp: `वडा ${ward.wardNumber} अधिकृत`,
-        email: wardEmail,
+        tenantId: tenant._id,
+        branchId: branch._id,
+        name: `Branch ${i+1} Manager`,
+        nameNp: `शाखा ${i+1} प्रबन्धक`,
+        email: branchEmail,
         password: 'Password123!',
         phone: generateNepaliPhone(),
-        roles: [wardOfficerRole._id],
-        rolesSlugs: ['ward_officer'],
+        roles: [branchManagerRole._id],
+        rolesSlugs: ['branch_manager'],
         isActive: true,
-        designation: 'Ward Secretary'
+        designation: 'Manager'
       });
     }
   }

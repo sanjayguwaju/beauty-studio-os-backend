@@ -2,9 +2,9 @@ import { Schema, Types } from "mongoose";
 import { tenantContext } from "../utils/tenantContext";
 
 export function tenantPlugin(schema: Schema) {
-  // Only apply to schemas that have a municipalityId
-  const hasMunicipalityId = schema.path("municipalityId");
-  if (!hasMunicipalityId) return;
+  // Only apply to schemas that have a tenantId
+  const hasTenantId = schema.path("tenantId");
+  if (!hasTenantId) return;
 
   const methods = [
     "find",
@@ -21,9 +21,9 @@ export function tenantPlugin(schema: Schema) {
     schema.pre(method as any, function (this: any, next) {
       const store = tenantContext.getStore();
       
-      if (store && store.municipalityId && !store.bypassTenant) {
-        // Inject municipalityId filter
-        this.where({ municipalityId: store.municipalityId });
+      if (store && store.tenantId && !store.bypassTenant) {
+        // Inject tenantId filter
+        this.where({ tenantId: store.tenantId });
       }
       
       next();
@@ -34,10 +34,10 @@ export function tenantPlugin(schema: Schema) {
   schema.pre("aggregate", function (this: any, next) {
     const store = tenantContext.getStore();
     
-    if (store && store.municipalityId && !store.bypassTenant) {
-      // Unshift a $match stage to filter by municipalityId
+    if (store && store.tenantId && !store.bypassTenant) {
+      // Unshift a $match stage to filter by tenantId
       this.pipeline().unshift({
-        $match: { municipalityId: new Types.ObjectId(store.municipalityId) },
+        $match: { tenantId: new Types.ObjectId(store.tenantId) },
       });
     }
     

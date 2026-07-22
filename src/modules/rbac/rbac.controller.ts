@@ -16,8 +16,8 @@ export const createRoleValidation = [
 export async function listRoles(req: AuthRequest, res: Response) {
   const roles = await Role.find({
     $or: [
-      { municipalityId: req.user!.municipalityId },
-      { municipalityId: null },
+      { tenantId: req.user!.tenantId },
+      { tenantId: null },
     ],
   });
   return sendSuccess(res, roles);
@@ -25,11 +25,11 @@ export async function listRoles(req: AuthRequest, res: Response) {
 
 export async function createRole(req: AuthRequest, res: Response) {
   const { name, nameNp, slug, description, permissions, level } = req.body;
-  const existing = await Role.findOne({ slug, municipalityId: req.user!.municipalityId });
+  const existing = await Role.findOne({ slug, tenantId: req.user!.tenantId });
   if (existing) return sendError(res, 409, "Role with this slug already exists");
   const role = await Role.create({
     name, nameNp, slug, description, permissions, level,
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
   });
   return sendSuccess(res, role, "Role created", 201);
 }

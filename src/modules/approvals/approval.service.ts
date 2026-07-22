@@ -14,8 +14,8 @@ async function getUserLevel(user: AuthUser): Promise<number> {
   return Math.min(...roles.map((r) => r.level));
 }
 
-async function getRoleSlugForLevel(level: number, municipalityId: string): Promise<string | null> {
-  const role = await Role.findOne({ level, municipalityId }).select("slug");
+async function getRoleSlugForLevel(level: number, tenantId: string): Promise<string | null> {
+  const role = await Role.findOne({ level, tenantId }).select("slug");
   return role?.slug ?? null;
 }
 
@@ -39,7 +39,7 @@ export const approvalConfig: Record<string, { maxAmountNpr: number; requiredLeve
  * currentLevelRequired = creator's role level - 1 (one rank up in the hierarchy).
  */
 export async function createApproval(
-  municipalityId: string,
+  tenantId: string,
   module: ApprovableModule,
   recordType: string,
   recordId: Types.ObjectId,
@@ -60,7 +60,7 @@ export async function createApproval(
   }
 
   const approval = await ApprovableDocument.create({
-    municipalityId: new Types.ObjectId(municipalityId),
+    tenantId: new Types.ObjectId(tenantId),
     module,
     recordType,
     recordId,
@@ -70,7 +70,7 @@ export async function createApproval(
   });
 
   // Notify next approver via Socket.IO
-  const nextRoleSlug = await getRoleSlugForLevel(currentLevelRequired, municipalityId);
+  const nextRoleSlug = await getRoleSlugForLevel(currentLevelRequired, tenantId);
   if (nextRoleSlug) {
     try {
       getIO().to(`role:${nextRoleSlug}`).emit("approval:pending", {
@@ -125,12 +125,12 @@ export async function processAction(
  * Fetch all pending approvals that the requesting user can action.
  */
 export async function getPendingForUser(
-  municipalityId: string,
+  tenantId: string,
   actor: AuthUser,
 ) {
   const actorLevel = await getUserLevel(actor);
   return ApprovableDocument.find({
-    municipalityId: new Types.ObjectId(municipalityId),
+    tenantId: new Types.ObjectId(tenantId),
     status: "pending",
     currentLevelRequired: { $gte: actorLevel },
   }).sort({ createdAt: 1 });

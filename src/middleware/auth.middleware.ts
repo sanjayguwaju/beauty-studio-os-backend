@@ -45,8 +45,7 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
         email: person.email,
         phone: person.phone,
         name: person.fullName,
-        municipalityId: person.tenantId?.toString() || "", // legacy fallback
-        tenantId: person.tenantId?.toString(),
+        tenantId: person.tenantId?.toString() || "",
         roles: rolesSlugs as any,
         roleAssignments: roleAssignments.map((ra: any) => ({
           tenantId: ra.tenantId.toString(),
@@ -60,8 +59,8 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
         id: userSession._id.toString(),
         email: userSession.email,
         name: userSession.name,
-        municipalityId: userSession.municipalityId.toString(),
-        wardId: userSession.wardId?.toString(),
+        tenantId: userSession.tenantId.toString(),
+        branchId: userSession.branchId?.toString(),
         roles: rolesSlugs as any,
       };
     } else {
@@ -73,8 +72,8 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
     req.user = authUser;
     req.ability = buildAbility(req.user, permissions);
     
-    const contextId = authUser.tenantId || authUser.municipalityId;
-    return tenantContext.run({ municipalityId: contextId }, () => {
+    const contextId = authUser.tenantId || authUser.tenantId;
+    return tenantContext.run({ tenantId: contextId }, () => {
       next();
     });
   } catch (err) {
@@ -106,8 +105,7 @@ export async function optionalAuthenticate(req: AuthRequest, res: Response, next
         email: person.email,
         phone: person.phone,
         name: person.fullName,
-        municipalityId: person.tenantId?.toString() || "",
-        tenantId: person.tenantId?.toString(),
+        tenantId: person.tenantId?.toString() || "",
         roles: rolesSlugs as any,
         roleAssignments: roleAssignments.map((ra: any) => ({
           tenantId: ra.tenantId.toString(),
@@ -121,8 +119,8 @@ export async function optionalAuthenticate(req: AuthRequest, res: Response, next
         id: userSession._id.toString(),
         email: userSession.email,
         name: userSession.name,
-        municipalityId: userSession.municipalityId.toString(),
-        wardId: userSession.wardId?.toString(),
+        tenantId: userSession.tenantId.toString(),
+        branchId: userSession.branchId?.toString(),
         roles: rolesSlugs as any,
       };
     }
@@ -131,8 +129,8 @@ export async function optionalAuthenticate(req: AuthRequest, res: Response, next
       const permissions = await getCachedPermissionsForRoles(rolesSlugs);
       req.user = authUser;
       req.ability = buildAbility(req.user, permissions);
-      const contextId = authUser.tenantId || authUser.municipalityId;
-      return tenantContext.run({ municipalityId: contextId }, () => {
+      const contextId = authUser.tenantId || authUser.tenantId;
+      return tenantContext.run({ tenantId: contextId }, () => {
         next();
       });
     }

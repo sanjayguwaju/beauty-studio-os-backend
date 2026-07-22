@@ -60,7 +60,7 @@ export function buildAbility(user: AuthUser, permissions: { module: string; acti
     infrastructure: ["InfraProject", "InfraMilestone", "InfraPayment"],
     agriculture: ["LivestockRecord", "AgricultureInventory"],
     finance: ["LedgerEntry", "BudgetAllocation", "RevenueCollection"],
-    administrative: ["Ward", "AdminDocument", "AdminSignature"],
+    administrative: ["Branch", "AdminDocument", "AdminSignature"],
     disaster_management: ["DisasterIncident", "DamageAssessment", "ReliefApplication"],
     inventory: ["InventoryItem", "InventoryTransaction", "Distribution"],
     feature_flags: ["FeatureFlag"],

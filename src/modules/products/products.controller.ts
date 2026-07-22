@@ -4,13 +4,13 @@ import { Product } from "../../models/Product";
 import { sendSuccess, sendError } from "../../utils/response";
 
 export async function listProducts(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const products = await Product.find({ tenantId }).lean();
   return sendSuccess(res, products);
 }
 
 export async function createProduct(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const branchId = req.user!.branchId || req.body.branchId;
 
   const product = await Product.create({
@@ -23,7 +23,7 @@ export async function createProduct(req: AuthRequest, res: Response) {
 }
 
 export async function updateProduct(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const product = await Product.findOneAndUpdate(
     { _id: req.params.id, tenantId },
     { $set: req.body },
@@ -35,7 +35,7 @@ export async function updateProduct(req: AuthRequest, res: Response) {
 }
 
 export async function addStock(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { quantity } = req.body; // amount to add
 
   const product = await Product.findOneAndUpdate(

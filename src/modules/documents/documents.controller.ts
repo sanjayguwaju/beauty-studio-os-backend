@@ -10,7 +10,7 @@ export async function listDocuments(req: AuthRequest, res: Response) {
 
 export async function uploadDocument(req: AuthRequest, res: Response) {
   // 1. Multer parses multipart (configured in routes)
-  // 2. Stream to R2 with municipality-scoped key: `{municipalityId}/{entityType}/{entityId}/{filename}`
+  // 2. Stream to R2 with municipality-scoped key: `{tenantId}/{entityType}/{entityId}/{filename}`
   // 3. Save metadata to a Document collection (add model as needed)
   return sendSuccess(res, { message: "Wire R2 upload here" }, "Upload endpoint ready", 201);
 }

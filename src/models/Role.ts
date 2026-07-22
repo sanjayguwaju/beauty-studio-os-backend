@@ -7,7 +7,7 @@ export interface IPermission {
 }
 
 export interface IRole extends Document {
-  municipalityId?: Types.ObjectId;
+  tenantId: Types.ObjectId;
   name: string;
   nameNp?: string;
   slug: SystemRole | string;
@@ -20,7 +20,7 @@ export interface IRole extends Document {
 
 const roleSchema = new Schema<IRole>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality" },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     name: { type: String, required: true },
     nameNp: String,
     slug: { type: String, required: true },
@@ -38,6 +38,6 @@ const roleSchema = new Schema<IRole>(
   { timestamps: true },
 );
 
-roleSchema.index({ municipalityId: 1, slug: 1 }, { unique: true, sparse: true });
+roleSchema.index({ tenantId: 1, slug: 1 }, { unique: true });
 
 export const Role = model<IRole>("Role", roleSchema);

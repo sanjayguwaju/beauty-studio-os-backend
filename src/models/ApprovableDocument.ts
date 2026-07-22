@@ -11,7 +11,7 @@ export interface IApprovalHistoryEntry {
 }
 
 export interface IApprovableDocument extends Document {
-  municipalityId: Types.ObjectId;
+  tenantId: Types.ObjectId;
   module: ApprovableModule;
   recordType: string;      // e.g. "AdminDocument", "ReliefApplication", "InfraMilestone"
   recordId: Types.ObjectId;
@@ -34,7 +34,7 @@ const approvalHistorySchema = new Schema<IApprovalHistoryEntry>(
 
 const approvableDocumentSchema = new Schema<IApprovableDocument>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     module: {
       type: String,
       enum: ["administrative", "disaster_management", "infrastructure"],
@@ -53,8 +53,8 @@ const approvableDocumentSchema = new Schema<IApprovableDocument>(
   { timestamps: true },
 );
 
-approvableDocumentSchema.index({ municipalityId: 1, status: 1 });
+approvableDocumentSchema.index({ tenantId: 1, status: 1 });
 approvableDocumentSchema.index({ recordId: 1, recordType: 1 });
-approvableDocumentSchema.index({ municipalityId: 1, currentLevelRequired: 1, status: 1 });
+approvableDocumentSchema.index({ tenantId: 1, currentLevelRequired: 1, status: 1 });
 
 export const ApprovableDocument = model<IApprovableDocument>("ApprovableDocument", approvableDocumentSchema);

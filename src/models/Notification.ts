@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface INotification extends Document {
-  municipalityId: Types.ObjectId;
+  tenantId: Types.ObjectId;
   recipientId?: Types.ObjectId;
   recipientPhone?: string;
   recipientEmail?: string;
@@ -18,7 +18,7 @@ export interface INotification extends Document {
 
 const notificationSchema = new Schema<INotification>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     recipientId: { type: Schema.Types.ObjectId, ref: "User" },
     recipientPhone: String,
     recipientEmail: String,

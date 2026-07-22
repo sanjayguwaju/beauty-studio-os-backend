@@ -11,7 +11,7 @@ export async function listServices(req: AuthRequest, res: Response) {
   const { search, category, branchId } = req.query;
 
   const filter: Record<string, unknown> = {
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   };
 
   if (branchId) {
@@ -49,7 +49,7 @@ export async function createService(req: AuthRequest, res: Response) {
 
   const service = await ServiceCatalog.create({
     ...req.body,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   return sendSuccess(res, service, "Service created", 201);
@@ -58,7 +58,7 @@ export async function createService(req: AuthRequest, res: Response) {
 export async function getService(req: AuthRequest, res: Response) {
   const service = await ServiceCatalog.findOne({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   if (!service) return sendError(res, 404, "Service not found");
@@ -82,7 +82,7 @@ export async function updateService(req: AuthRequest, res: Response) {
   }
 
   const service = await ServiceCatalog.findOneAndUpdate(
-    { _id: req.params.id, tenantId: req.user!.tenantId || req.user!.municipalityId },
+    { _id: req.params.id, tenantId: req.user!.tenantId || req.user!.tenantId },
     { $set: req.body },
     { new: true }
   );
@@ -99,7 +99,7 @@ export async function deleteService(req: AuthRequest, res: Response) {
 
   const service = await ServiceCatalog.findOneAndDelete({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   if (!service) return sendError(res, 404, "Service not found");

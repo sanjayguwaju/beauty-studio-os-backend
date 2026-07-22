@@ -7,9 +7,9 @@ import { env } from "../../config/env";
 import crypto from "crypto";
 
 export async function getMySubscription(req: AuthRequest, res: Response) {
-  if (!req.user?.municipalityId) return sendError(res, 401, "Unauthorized");
+  if (!req.user?.tenantId) return sendError(res, 401, "Unauthorized");
 
-  const sub = await Subscription.findOne({ municipalityId: req.user.municipalityId }).sort({ createdAt: -1 });
+  const sub = await Subscription.findOne({ tenantId: req.user.tenantId }).sort({ createdAt: -1 });
   if (!sub) return sendSuccess(res, null, "No subscription found");
 
   return sendSuccess(res, sub);
@@ -22,22 +22,22 @@ export async function getAllSubscriptions(req: AuthRequest, res: Response) {
   }
 
   const subscriptions = await Subscription.find()
-    .populate("municipalityId", "name type province district")
+    .populate("tenantId", "name type province district")
     .sort({ createdAt: -1 });
 
   return sendSuccess(res, subscriptions);
 }
 
 export async function initiatePayment(req: AuthRequest, res: Response) {
-  if (!req.user?.municipalityId) return sendError(res, 401, "Unauthorized");
+  if (!req.user?.tenantId) return sendError(res, 401, "Unauthorized");
   
   const { planName, price } = req.body; // e.g. "Premium", 15000
   
   // Create pending subscription if doesn't exist
-  let sub = await Subscription.findOne({ municipalityId: req.user.municipalityId });
+  let sub = await Subscription.findOne({ tenantId: req.user.tenantId });
   if (!sub) {
     sub = await Subscription.create({
-      municipalityId: req.user.municipalityId,
+      tenantId: req.user.tenantId,
       planName,
       price,
       status: "trial",
@@ -48,7 +48,7 @@ export async function initiatePayment(req: AuthRequest, res: Response) {
 
   // Create pending payment record
   const payment = await Payment.create({
-    municipalityId: req.user.municipalityId,
+    tenantId: req.user.tenantId,
     subscriptionId: sub._id,
     amount: price,
     provider: "esewa",

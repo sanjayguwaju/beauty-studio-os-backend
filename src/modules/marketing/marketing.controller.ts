@@ -10,7 +10,7 @@ const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY || 'globalapikey';
 
 export const listCampaigns = async (req: AuthRequest, res: Response) => {
   try {
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
     const campaigns = await Campaign.find({ tenantId }).sort({ createdAt: -1 });
     sendSuccess(res, campaigns);
   } catch (error) {
@@ -20,7 +20,7 @@ export const listCampaigns = async (req: AuthRequest, res: Response) => {
 
 export const createAndSendCampaign = async (req: AuthRequest, res: Response) => {
   try {
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
     const { name, targetAudience, messageTemplate } = req.body;
 
     // 1. Create the Campaign record in Draft mode

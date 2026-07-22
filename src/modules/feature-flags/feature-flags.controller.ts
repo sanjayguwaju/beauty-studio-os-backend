@@ -25,7 +25,7 @@ import { tenantContext } from "../../utils/tenantContext";
 
 export async function getSystemFeatureFlags(req: AuthRequest, res: Response) {
   const dbSystemFlags = await tenantContext.run(
-    { bypassTenant: true, municipalityId: "system" },
+    { bypassTenant: true, tenantId: "system" },
     () => FeatureFlag.find({ isSystemFlag: true })
   );
   
@@ -79,12 +79,12 @@ export async function listFeatureFlags(req: AuthRequest, res: Response) {
   const query: any = {};
   const isSuperAdmin = req.user?.roles?.includes("platform_admin");
   
-  if (!isSuperAdmin && req.user?.municipalityId) {
-    query.municipalityId = req.user.municipalityId;
+  if (!isSuperAdmin && req.user?.tenantId) {
+    query.tenantId = req.user.tenantId;
   }
 
   const flags = await tenantContext.run(
-    { bypassTenant: isSuperAdmin, municipalityId: req.user?.municipalityId },
+    { bypassTenant: isSuperAdmin, tenantId: req.user?.tenantId },
     () => FeatureFlag.find(query).sort("name")
   );
   return sendSuccess(res, flags);
@@ -93,8 +93,8 @@ export async function listFeatureFlags(req: AuthRequest, res: Response) {
 export async function createFeatureFlag(req: AuthRequest, res: Response) {
   try {
     const flagData = { ...req.body };
-    if (req.user?.municipalityId && !flagData.municipalityId) {
-      flagData.municipalityId = req.user.municipalityId;
+    if (req.user?.tenantId && !flagData.tenantId) {
+      flagData.tenantId = req.user.tenantId;
     }
     const flag = await FeatureFlag.create(flagData);
     return sendSuccess(res, flag, "Feature flag created", 201);
@@ -108,7 +108,7 @@ export async function createFeatureFlag(req: AuthRequest, res: Response) {
 
 export async function updateFeatureFlag(req: AuthRequest, res: Response) {
   const query: any = { _id: req.params.id };
-  if (req.user?.municipalityId) query.municipalityId = req.user.municipalityId;
+  if (req.user?.tenantId) query.tenantId = req.user.tenantId;
   const flag = await FeatureFlag.findOneAndUpdate(
     query,
     { $set: req.body },
@@ -120,7 +120,7 @@ export async function updateFeatureFlag(req: AuthRequest, res: Response) {
 
 export async function deleteFeatureFlag(req: AuthRequest, res: Response) {
   const query: any = { _id: req.params.id };
-  if (req.user?.municipalityId) query.municipalityId = req.user.municipalityId;
+  if (req.user?.tenantId) query.tenantId = req.user.tenantId;
   const flag = await FeatureFlag.findOneAndDelete(query);
   if (!flag) return sendError(res, 404, "Feature flag not found");
   return sendSuccess(res, null, "Feature flag deleted");

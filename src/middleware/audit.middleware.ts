@@ -11,7 +11,7 @@ export function auditLog(module: string, action: string, entityType: string) {
       const statusCode = _res.statusCode;
       if (statusCode >= 200 && statusCode < 300 && req.user) {
         AuditLog.create({
-          municipalityId: req.user.municipalityId,
+          tenantId: req.user.tenantId,
           actorId: req.user.id,
           actorEmail: req.user.email,
           module,

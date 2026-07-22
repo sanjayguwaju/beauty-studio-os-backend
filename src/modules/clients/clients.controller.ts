@@ -11,7 +11,7 @@ export async function listClients(req: AuthRequest, res: Response) {
   const pageSize = Math.min(parseInt(req.query.pageSize as string ?? "20"), 100);
   const { search } = req.query;
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
 
   // Since ClientProfile uses Person for name/phone, we need to join or search Persons first
   const personQuery: Record<string, unknown> = { tenantId };
@@ -48,7 +48,7 @@ export async function createClient(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden: Cannot create clients");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { fullName, phone, email, preferences, allergyNotes, patchTestOnFile, patchTestDate } = req.body;
 
   // 1. Create or find Person
@@ -91,7 +91,7 @@ export async function createClient(req: AuthRequest, res: Response) {
 export async function getClient(req: AuthRequest, res: Response) {
   const client = await ClientProfile.findOne({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   }).populate("personId", "fullName phone email image");
 
   if (!client) return sendError(res, 404, "Client not found");
@@ -110,7 +110,7 @@ export async function updateClient(req: AuthRequest, res: Response) {
   }
 
   const { fullName, phone, email, preferences, allergyNotes, patchTestOnFile, patchTestDate } = req.body;
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
 
   const client = await ClientProfile.findOne({ _id: req.params.id, tenantId });
   if (!client) return sendError(res, 404, "Client not found");
@@ -139,7 +139,7 @@ export async function deleteClient(req: AuthRequest, res: Response) {
 
   const client = await ClientProfile.findOneAndDelete({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   if (!client) return sendError(res, 404, "Client not found");

@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IAdminDocument extends Document {
-  municipalityId: Types.ObjectId;
+  tenantId: Types.ObjectId;
   title: string;
   titleNp?: string;
   documentUrl?: string; // R2/S3 URL via existing /upload module
@@ -12,7 +12,7 @@ export interface IAdminDocument extends Document {
 
 const adminDocumentSchema = new Schema<IAdminDocument>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     title: { type: String, required: true },
     titleNp: String,
     documentUrl: String,
@@ -23,6 +23,6 @@ const adminDocumentSchema = new Schema<IAdminDocument>(
   { timestamps: true },
 );
 
-adminDocumentSchema.index({ municipalityId: 1, isDeleted: 1 });
+adminDocumentSchema.index({ tenantId: 1, isDeleted: 1 });
 
 export const AdminDocument = model<IAdminDocument>("AdminDocument", adminDocumentSchema);

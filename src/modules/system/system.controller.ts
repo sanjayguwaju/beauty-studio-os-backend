@@ -174,7 +174,7 @@ export async function updateTenantSettings(req: AuthRequest, res: Response) {
     if (name !== undefined) updateData.name = name;
 
     const tenant = await Tenant.findByIdAndUpdate(
-      req.user.municipalityId || req.user.tenantId,
+      req.user.tenantId || req.user.tenantId,
       { $set: updateData },
       { new: true }
     );
@@ -251,7 +251,7 @@ export async function signupTenant(req: Request, res: Response) {
     });
 
     const user = await User.create({
-      municipalityId: tenantId as any,
+      tenantId: tenantId as any,
       name: ownerName,
       email: ownerEmail,
       password, // Should be hashed in pre-save middleware

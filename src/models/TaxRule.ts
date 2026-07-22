@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITaxRule extends Document {
-  municipalityId: mongoose.Types.ObjectId;
+  tenantId: mongoose.Types.ObjectId;
   name: string;
   taxType: "property" | "business" | "vehicle" | "other";
   baseRate: number;
@@ -13,7 +13,7 @@ export interface ITaxRule extends Document {
 
 const TaxRuleSchema: Schema = new Schema(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     name: { type: String, required: true },
     taxType: { type: String, enum: ["property", "business", "vehicle", "other"], required: true },
     baseRate: { type: Number, required: true },

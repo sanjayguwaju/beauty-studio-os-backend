@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IAuditLog extends Document {
-  municipalityId?: Types.ObjectId;
+  tenantId?: Types.ObjectId;
   actorId?: Types.ObjectId;
   actorEmail?: string;
   module: string;
@@ -18,7 +18,7 @@ export interface IAuditLog extends Document {
 
 const auditLogSchema = new Schema<IAuditLog>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality" },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant" },
     actorId: { type: Schema.Types.ObjectId, ref: "User" },
     actorEmail: String,
     module: { type: String, required: true },
@@ -35,7 +35,7 @@ const auditLogSchema = new Schema<IAuditLog>(
   { timestamps: true },
 );
 
-auditLogSchema.index({ municipalityId: 1, createdAt: -1 });
+auditLogSchema.index({ tenantId: 1, createdAt: -1 });
 auditLogSchema.index({ actorId: 1 });
 auditLogSchema.index({ entityType: 1, entityId: 1 });
 

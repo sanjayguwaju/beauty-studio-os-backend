@@ -8,7 +8,7 @@ export async function listAuditLogs(req: AuthRequest, res: Response) {
   const pageSize = Math.min(parseInt(req.query.pageSize as string ?? "50"), 200);
   const { module, action, entityType, actorId, from, to } = req.query;
 
-  const filter: Record<string, unknown> = { municipalityId: req.user!.municipalityId };
+  const filter: Record<string, unknown> = { tenantId: req.user!.tenantId };
   if (module) filter.module = module;
   if (action) filter.action = action;
   if (entityType) filter.entityType = entityType;

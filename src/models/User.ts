@@ -3,8 +3,8 @@ import bcrypt from "bcryptjs";
 import { SystemRole } from "../types";
 
 export interface IUser extends Document {
-  municipalityId: Types.ObjectId;
-  wardId?: Types.ObjectId;
+  tenantId: Types.ObjectId;
+  branchId?: Types.ObjectId;
   name: string;
   nameNp?: string;
   email: string;
@@ -35,8 +35,8 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
-    wardId: { type: Schema.Types.ObjectId, ref: "Ward" },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
+    branchId: { type: Schema.Types.ObjectId, ref: "Branch" },
     name: { type: String, required: true },
     nameNp: String,
     email: { type: String, required: true, unique: true, lowercase: true },
@@ -66,7 +66,7 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
-userSchema.index({ municipalityId: 1, email: 1 });
+userSchema.index({ tenantId: 1, email: 1 });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

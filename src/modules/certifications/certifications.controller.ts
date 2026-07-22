@@ -150,7 +150,7 @@ export async function issueCertificate(req: AuthRequest, res: Response) {
   // Phase 7: Trigger Certificate Ready Notification
   const student = await Person.findById(studentPersonId);
   if (student) {
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
     notificationQueue.add({
       tenantId,
       triggerType: "certificate_ready",

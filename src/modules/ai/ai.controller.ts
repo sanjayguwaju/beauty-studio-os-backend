@@ -9,7 +9,7 @@ import { sendSuccess, sendError } from "../../utils/response";
 // --- Recommendations ---
 
 export async function generateRecommendations(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { personId } = req.params;
 
   // Mock AI Generation Logic
@@ -29,7 +29,7 @@ export async function generateRecommendations(req: AuthRequest, res: Response) {
 }
 
 export async function getRecommendations(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { personId } = req.params;
 
   const recommendations = await AiRecommendation.find({
@@ -42,7 +42,7 @@ export async function getRecommendations(req: AuthRequest, res: Response) {
 }
 
 export async function dismissRecommendation(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { id } = req.params;
 
   const recommendation = await AiRecommendation.findOneAndUpdate(
@@ -61,7 +61,7 @@ export async function dismissRecommendation(req: AuthRequest, res: Response) {
 // --- OCR Document Intake ---
 
 export async function processOcr(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { sourceDocumentUrl } = req.body;
 
   if (!sourceDocumentUrl) {
@@ -87,14 +87,14 @@ export async function processOcr(req: AuthRequest, res: Response) {
 }
 
 export async function getPendingOcr(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   
   const extractions = await OcrExtraction.find({ tenantId, status: "pending" }).sort({ createdAt: -1 });
   return sendSuccess(res, extractions);
 }
 
 export async function approveOcr(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { id } = req.params;
   const { finalFields } = req.body; // Allows staff to correct fields during approval
 

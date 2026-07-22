@@ -14,13 +14,13 @@ export const ledgerValidation = [
 export async function listLedgerEntries(req: AuthRequest, res: Response) {
   const page = parseInt((req.query.page as string) ?? "1");
   const pageSize = Math.min(parseInt((req.query.pageSize as string) ?? "20"), 100);
-  const filter: Record<string, unknown> = { municipalityId: req.user!.municipalityId };
+  const filter: Record<string, unknown> = { tenantId: req.user!.tenantId };
   if (req.query.type) filter.type = req.query.type;
   if (req.query.sourceModule) filter.sourceModule = req.query.sourceModule;
-  if (req.query.wardId) filter.wardId = req.query.wardId;
+  if (req.query.branchId) filter.branchId = req.query.branchId;
 
   const [data, total] = await Promise.all([
-    LedgerEntry.find(filter).populate("wardId", "wardNumber").skip((page - 1) * pageSize).limit(pageSize).sort({ dateBs: -1 }),
+    LedgerEntry.find(filter).populate("branchId", "branchCode").skip((page - 1) * pageSize).limit(pageSize).sort({ dateBs: -1 }),
     LedgerEntry.countDocuments(filter),
   ]);
   return sendPaginated(res, data, total, page, pageSize);
@@ -30,7 +30,7 @@ export async function createLedgerEntry(req: AuthRequest, res: Response) {
   // Ledger is append-only — no updates or deletes (matches AuditLog immutability pattern)
   const entry = await LedgerEntry.create({
     ...req.body,
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
   });
   return sendSuccess(res, entry, "Ledger entry recorded", 201);
 }

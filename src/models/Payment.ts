@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IPayment extends Document {
-  municipalityId: mongoose.Types.ObjectId;
+  tenantId: mongoose.Types.ObjectId;
   subscriptionId: mongoose.Types.ObjectId;
   amount: number;
   status: "pending" | "completed" | "failed";
@@ -12,7 +12,7 @@ export interface IPayment extends Document {
 
 const PaymentSchema: Schema = new Schema(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     subscriptionId: { type: Schema.Types.ObjectId, ref: "Subscription", required: true },
     amount: { type: Number, required: true },
     status: { type: String, enum: ["pending", "completed", "failed"], default: "pending" },

@@ -1,28 +1,28 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IFeatureFlag extends Document {
-  municipalityId?: Types.ObjectId;
+  tenantId?: Types.ObjectId;
   key: string;
   name: string;
   description?: string;
   isActive: boolean;
   isSystemFlag?: boolean;
-  enabledWards: Types.ObjectId[];
+  enabledBranchs: Types.ObjectId[];
 }
 
 const featureFlagSchema = new Schema<IFeatureFlag>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: false },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: false },
     key: { type: String, required: true },
     name: { type: String, required: true },
     description: String,
     isActive: { type: Boolean, default: false },
     isSystemFlag: { type: Boolean, default: false },
-    enabledWards: [{ type: Schema.Types.ObjectId, ref: "Ward" }],
+    enabledBranchs: [{ type: Schema.Types.ObjectId, ref: "Branch" }],
   },
   { timestamps: true }
 );
 
-featureFlagSchema.index({ municipalityId: 1, key: 1 }, { unique: true });
+featureFlagSchema.index({ tenantId: 1, key: 1 }, { unique: true });
 
 export const FeatureFlag = model<IFeatureFlag>("FeatureFlag", featureFlagSchema);

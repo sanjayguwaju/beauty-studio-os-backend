@@ -11,7 +11,7 @@ export async function listStaff(req: AuthRequest, res: Response) {
   const pageSize = Math.min(parseInt(req.query.pageSize as string ?? "20"), 100);
   const { search, branchId } = req.query;
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personQuery: Record<string, unknown> = { tenantId };
 
   if (search) {
@@ -47,7 +47,7 @@ export async function listStaff(req: AuthRequest, res: Response) {
 export async function getStaff(req: AuthRequest, res: Response) {
   const staff = await StaffProfile.findOne({
     _id: req.params.id,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   }).populate("personId", "fullName phone email image");
 
   if (!staff) return sendError(res, 404, "Staff profile not found");
@@ -68,7 +68,7 @@ export async function updateStaff(req: AuthRequest, res: Response) {
   }
 
   const { specialties, workingHours, branchId } = req.body;
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
 
   const updatedStaff = await StaffProfile.findByIdAndUpdate(
     req.params.id,
@@ -86,7 +86,7 @@ export async function createStaff(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden: Cannot create staff profiles");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { personId, branchId, specialties, workingHours } = req.body;
 
   const existingProfile = await StaffProfile.findOne({ personId, tenantId });

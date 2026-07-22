@@ -43,8 +43,8 @@ export function initSocket(server: HttpServer) {
     }
 
     // Join tenant room for global tenant updates
-    if (user.tenantId || user.municipalityId) {
-      socket.join(`tenant:${user.tenantId || user.municipalityId}`);
+    if (user.tenantId || user.tenantId) {
+      socket.join(`tenant:${user.tenantId || user.tenantId}`);
     }
 
     socket.on("disconnect", () => {

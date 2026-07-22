@@ -16,7 +16,7 @@ export interface IConversation extends Document {
 
 const ConversationSchema = new Schema<IConversation>(
   {
-    tenantId: { type: Schema.Types.ObjectId, ref: 'Municipality', required: true }, // Using legacy name for tenant for now
+    tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true }, // Using legacy name for tenant for now
     clientId: { type: Schema.Types.ObjectId, ref: 'Citizen' }, // Using legacy name for client
     platform: { type: String, enum: ['whatsapp', 'instagram', 'facebook'], required: true },
     platformIdentifier: { type: String, required: true },

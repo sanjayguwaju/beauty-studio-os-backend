@@ -6,8 +6,8 @@ export function signAccessToken(user: AuthUser): string {
   const payload: Omit<AccessTokenPayload, "iat" | "exp"> = {
     sub: user.id,
     email: user.email,
-    municipalityId: user.municipalityId,
-    wardId: user.wardId,
+    tenantId: user.tenantId,
+    branchId: user.branchId,
     roles: user.roles,
   };
   return jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN } as jwt.SignOptions);

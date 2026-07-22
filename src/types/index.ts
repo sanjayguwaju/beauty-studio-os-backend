@@ -57,7 +57,7 @@ export type PermissionAction = "create" | "read" | "update" | "delete" | "approv
 
 // ─── CASL Subjects ─────────────────────────────────────────────────────────────
 export type CaslSubject =
-  | "Ward" | "Citizen" | "Document" | "Correspondence"
+  | "Branch" | "Citizen" | "Document" | "Correspondence"
   | "ServiceRequest" | "Registration" | "Complaint"
   | "Notification" | "AuditLog" | "User" | "Role"
   | "Dashboard" | "FeatureFlag"
@@ -106,10 +106,8 @@ export interface AuthUser {
   email?: string;
   phone?: string;
   name: string;
-  municipalityId: string;
-  wardId?: string;
   roles: SystemRole[];
-  tenantId?: string;
+  tenantId: string;
   branchId?: string;
   personId?: string;
   roleAssignments?: Array<{
@@ -129,10 +127,9 @@ export interface AccessTokenPayload extends JwtPayload {
   sub: string;
   email?: string;
   phone?: string;
-  municipalityId: string;
-  wardId?: string;
   roles: SystemRole[];
-  tenantId?: string;
+  tenantId: string;
+  branchId?: string;
 }
 
 // ─── API Envelope ──────────────────────────────────────────────────────────────

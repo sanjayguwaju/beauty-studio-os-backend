@@ -9,7 +9,7 @@ import { generatePdfFromHtml } from "../../utils/pdfGenerator";
 import { generateInvoiceHtml, InvoiceData } from "../../templates/pdf/invoice";
 
 export async function listInvoices(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { type } = req.query; // "service" | "course_fee"
   
   const filter: any = { tenantId };
@@ -24,7 +24,7 @@ export async function listInvoices(req: AuthRequest, res: Response) {
 }
 
 export async function createCourseFeeInvoice(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const branchId = req.user!.branchId || req.body.branchId;
 
   const { studentPersonId, enrollmentId, lineItems, totalAmount } = req.body;
@@ -44,7 +44,7 @@ export async function createCourseFeeInvoice(req: AuthRequest, res: Response) {
 
 export async function posCheckout(req: AuthRequest, res: Response) {
   try {
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
     const branchId = req.user!.branchId || req.body.branchId;
     const { clientPersonId, lineItems, paymentMethod, redeemPoints } = req.body;
 
@@ -146,7 +146,7 @@ export async function listCommissions(req: AuthRequest, res: Response) {
 export async function downloadInvoicePdf(req: AuthRequest, res: Response) {
   try {
     const { id } = req.params;
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
 
     const invoice = await Invoice.findOne({ _id: id, tenantId }).populate("clientOrStudentPersonId");
     if (!invoice) {

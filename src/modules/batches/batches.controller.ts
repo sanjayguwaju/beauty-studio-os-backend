@@ -15,7 +15,7 @@ export async function listBatches(req: AuthRequest, res: Response) {
   const pageSize = Math.min(parseInt(req.query.pageSize as string ?? "20"), 100);
   const { search, courseId } = req.query;
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const filter: Record<string, unknown> = { tenantId };
 
   if (courseId) {
@@ -45,14 +45,14 @@ export async function createBatch(req: AuthRequest, res: Response) {
 
   const batch = await Batch.create({
     ...req.body,
-    tenantId: req.user!.tenantId || req.user!.municipalityId,
+    tenantId: req.user!.tenantId || req.user!.tenantId,
   });
 
   return sendSuccess(res, batch, "Batch created", 201);
 }
 
 export async function getBatch(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const batch = await Batch.findOne({ _id: req.params.id, tenantId })
     .populate("courseId", "name category")
     .populate("instructorPersonId", "fullName email");
@@ -77,7 +77,7 @@ export async function updateBatch(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const batch = await Batch.findOneAndUpdate(
     { _id: req.params.id, tenantId },
     { $set: req.body },
@@ -93,7 +93,7 @@ export async function deleteBatch(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const batch = await Batch.findOneAndDelete({ _id: req.params.id, tenantId });
   if (!batch) return sendError(res, 404, "Batch not found");
 
@@ -109,7 +109,7 @@ export async function enrollStudent(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { batchId, studentPersonId } = req.body;
 
   const batch = await Batch.findOne({ _id: batchId, tenantId });

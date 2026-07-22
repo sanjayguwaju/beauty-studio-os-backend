@@ -8,7 +8,7 @@ export async function getAttendanceForBatch(req: AuthRequest, res: Response) {
   const { batchId } = req.params;
   const { sessionDate } = req.query; // YYYY-MM-DD
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
 
   const batch = await Batch.findOne({ _id: batchId, tenantId });
   if (!batch) return sendError(res, 404, "Batch not found");
@@ -30,7 +30,7 @@ export async function syncAttendance(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { records } = req.body; // Array of { batchId, studentPersonId, sessionDate, status, recordedOffline, syncedAt }
 
   if (!Array.isArray(records)) {

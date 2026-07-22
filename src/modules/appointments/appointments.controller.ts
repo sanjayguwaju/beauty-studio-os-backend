@@ -22,7 +22,7 @@ import { notificationQueue } from "../../queue/notification.queue";
 export async function listAppointments(req: AuthRequest, res: Response) {
   const { start, end } = req.query; // ISO Date strings
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const filter: Record<string, unknown> = { tenantId };
 
   // For calendar view, we often fetch a date range
@@ -46,7 +46,7 @@ export async function createAppointment(req: AuthRequest, res: Response) {
     return sendError(res, 403, "Forbidden");
   }
 
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const {
     branchId,
     clientPersonId,
@@ -113,7 +113,7 @@ export async function createAppointment(req: AuthRequest, res: Response) {
 }
 
 export async function updateAppointment(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { scheduledStart, scheduledEnd, status } = req.body;
 
   const appointment = await Appointment.findOne({ _id: req.params.id, tenantId });
@@ -151,7 +151,7 @@ export async function updateAppointment(req: AuthRequest, res: Response) {
 }
 
 export async function completeAppointment(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { beforePhotoUrl, afterPhotoUrl, productsUsed, outcomeNotes } = req.body;
 
   const appointment = await Appointment.findOne({ _id: req.params.id, tenantId });

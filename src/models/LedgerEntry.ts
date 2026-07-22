@@ -1,10 +1,10 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface ILedgerEntry extends Document {
-  municipalityId: Types.ObjectId;
+  tenantId: Types.ObjectId;
   type: "income" | "expense";
   amountNpr: number;
-  wardId?: Types.ObjectId;
+  branchId?: Types.ObjectId;
   /** Which department/module generated this entry — e.g. "disaster_management", "agriculture" */
   sourceModule?: string;
   /** Polymorphic ref to the source record (ReliefApplication, Distribution, etc.) */
@@ -15,10 +15,10 @@ export interface ILedgerEntry extends Document {
 
 const ledgerEntrySchema = new Schema<ILedgerEntry>(
   {
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     type: { type: String, enum: ["income", "expense"], required: true },
     amountNpr: { type: Number, required: true, min: 0 },
-    wardId: { type: Schema.Types.ObjectId, ref: "Ward" },
+    branchId: { type: Schema.Types.ObjectId, ref: "Branch" },
     sourceModule: String,
     sourceRecordId: Schema.Types.ObjectId,
     description: { type: String, required: true },
@@ -30,8 +30,8 @@ const ledgerEntrySchema = new Schema<ILedgerEntry>(
   },
 );
 
-ledgerEntrySchema.index({ municipalityId: 1, type: 1 });
-ledgerEntrySchema.index({ municipalityId: 1, dateBs: 1 });
+ledgerEntrySchema.index({ tenantId: 1, type: 1 });
+ledgerEntrySchema.index({ tenantId: 1, dateBs: 1 });
 ledgerEntrySchema.index({ sourceModule: 1, sourceRecordId: 1 });
 
 export const LedgerEntry = model<ILedgerEntry>("LedgerEntry", ledgerEntrySchema);

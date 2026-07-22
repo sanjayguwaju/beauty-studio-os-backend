@@ -5,7 +5,7 @@ export interface IDocument extends MongooseDocument {
   templateName: string;
   data: Record<string, any>;
   issuedBy: mongoose.Types.ObjectId;
-  municipalityId: mongoose.Types.ObjectId;
+  tenantId: mongoose.Types.ObjectId;
   verificationHash: string;
   issueDate: Date;
   status: "valid" | "revoked";
@@ -18,7 +18,7 @@ const DocumentSchema = new Schema<IDocument>(
     templateName: { type: String, required: true },
     data: { type: Schema.Types.Mixed, default: {} },
     issuedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    municipalityId: { type: Schema.Types.ObjectId, ref: "Municipality", required: true },
+    tenantId: { type: Schema.Types.ObjectId, ref: "Tenant", required: true },
     verificationHash: { type: String, required: true, unique: true },
     issueDate: { type: Date, default: Date.now },
     status: { type: String, enum: ["valid", "revoked"], default: "valid" },

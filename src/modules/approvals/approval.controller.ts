@@ -12,7 +12,7 @@ export const actionValidation = [
 ];
 
 export async function listPendingApprovals(req: AuthRequest, res: Response) {
-  const approvals = await getPendingForUser(req.user!.municipalityId, req.user!);
+  const approvals = await getPendingForUser(req.user!.tenantId, req.user!);
   return sendSuccess(res, approvals);
 }
 
@@ -32,7 +32,7 @@ export async function actionApproval(req: AuthRequest, res: Response) {
   }
 
   await AuditLog.create({
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
     actorId: req.user!.id,
     actorEmail: req.user!.email,
     module: "approvals",

@@ -6,7 +6,7 @@ import { LoyaltyTransaction } from '../../models/LoyaltyTransaction';
 
 export const getLoyaltyDashboard = async (req: AuthRequest, res: Response) => {
   try {
-    const tenantId = req.user!.tenantId || req.user!.municipalityId;
+    const tenantId = req.user!.tenantId || req.user!.tenantId;
 
     // 1. Get Top 10 Clients by Loyalty Points
     const leaderboard = await Person.find({ tenantId, loyaltyPoints: { $gt: 0 } })

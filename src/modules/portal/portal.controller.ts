@@ -10,7 +10,7 @@ import { sendSuccess, sendError } from "../../utils/response";
 // --- CLIENT PORTAL ---
 
 export async function getClientAppointments(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
 
   if (!personId) return sendError(res, 401, "Person identity required");
@@ -26,7 +26,7 @@ export async function getClientAppointments(req: AuthRequest, res: Response) {
 }
 
 export async function bookClientAppointment(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
   const { serviceId, practitionerPersonId, scheduledStart, scheduledEnd } = req.body;
 
@@ -62,7 +62,7 @@ export async function bookClientAppointment(req: AuthRequest, res: Response) {
 }
 
 export async function getClientInvoices(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
 
   if (!personId) return sendError(res, 401, "Person identity required");
@@ -78,7 +78,7 @@ export async function getClientInvoices(req: AuthRequest, res: Response) {
 // --- STUDENT PORTAL ---
 
 export async function getStudentSchedule(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
 
   if (!personId) return sendError(res, 401, "Person identity required");
@@ -96,7 +96,7 @@ export async function getStudentSchedule(req: AuthRequest, res: Response) {
 }
 
 export async function getStudentProgress(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
 
   if (!personId) return sendError(res, 401, "Person identity required");
@@ -109,7 +109,7 @@ export async function getStudentProgress(req: AuthRequest, res: Response) {
 }
 
 export async function getStudentCertificates(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const personId = req.user!.personId;
 
   if (!personId) return sendError(res, 401, "Person identity required");

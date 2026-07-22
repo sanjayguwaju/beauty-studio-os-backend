@@ -7,7 +7,7 @@ import { SubscriptionPlan } from "../models/SubscriptionPlan";
 export const requireFeature = (feature: "academy" | "ai" | "billing") => {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const tenantId = req.user?.tenantId || req.user?.municipalityId;
+      const tenantId = req.user?.tenantId || req.user?.tenantId;
       if (!tenantId) {
         return sendError(res, 401, "Unauthorized");
       }

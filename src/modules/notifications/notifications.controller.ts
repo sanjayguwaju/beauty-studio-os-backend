@@ -31,13 +31,13 @@ export async function markRead(req: AuthRequest, res: Response) {
 }
 
 export async function listTemplates(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const templates = await NotificationTemplate.find({ tenantId }).lean();
   return sendSuccess(res, templates);
 }
 
 export async function createTemplate(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { channel, triggerType, subject, bodyTemplate } = req.body;
 
   const existing = await NotificationTemplate.findOne({ tenantId, triggerType, channel });
@@ -57,7 +57,7 @@ export async function createTemplate(req: AuthRequest, res: Response) {
 }
 
 export async function updateTemplate(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const template = await NotificationTemplate.findOneAndUpdate(
     { _id: req.params.id, tenantId },
     { $set: req.body },
@@ -69,7 +69,7 @@ export async function updateTemplate(req: AuthRequest, res: Response) {
 }
 
 export async function listLogs(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const logs = await NotificationLog.find({ tenantId })
     .populate("personId", "fullName email phone")
     .sort({ createdAt: -1 })
@@ -80,7 +80,7 @@ export async function listLogs(req: AuthRequest, res: Response) {
 }
 
 export async function sendPromo(req: AuthRequest, res: Response) {
-  const tenantId = req.user!.tenantId || req.user!.municipalityId;
+  const tenantId = req.user!.tenantId || req.user!.tenantId;
   const { audience, messageBody, channel } = req.body; 
   
   if (!messageBody || !channel) {

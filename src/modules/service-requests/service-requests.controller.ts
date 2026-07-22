@@ -15,16 +15,16 @@ export const createSRValidation = [
 export async function listServiceRequests(req: AuthRequest, res: Response) {
   const page = parseInt(req.query.page as string ?? "1");
   const pageSize = parseInt(req.query.pageSize as string ?? "20");
-  const { status, wardId } = req.query;
+  const { status, branchId } = req.query;
 
   const filter: Record<string, unknown> = {
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
     isDeleted: false,
   };
   if (status) filter.status = status;
-  if (wardId) filter.wardId = wardId;
-  if (req.user!.roles.includes("ward_officer") && req.user!.wardId) {
-    filter.wardId = req.user!.wardId;
+  if (branchId) filter.branchId = branchId;
+  if (req.user!.roles.includes("ward_officer") && req.user!.branchId) {
+    filter.branchId = req.user!.branchId;
   }
 
   const [data, total] = await Promise.all([
@@ -38,12 +38,12 @@ export async function createServiceRequest(req: AuthRequest, res: Response) {
   const trackingNumber = generateTrackingNumber("SR");
   const sr = await ServiceRequest.create({
     ...req.body,
-    municipalityId: req.user!.municipalityId,
-    wardId: req.user!.wardId,
+    tenantId: req.user!.tenantId,
+    branchId: req.user!.branchId,
     trackingNumber,
   });
   await AuditLog.create({
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
     actorId: req.user!.id,
     module: "service_requests", action: "CREATE", entityType: "ServiceRequest",
     entityId: sr._id, entityLabel: `SR: ${sr.serviceType} - ${sr.applicantName}`,
@@ -54,7 +54,7 @@ export async function createServiceRequest(req: AuthRequest, res: Response) {
 export async function getServiceRequest(req: AuthRequest, res: Response) {
   const sr = await ServiceRequest.findOne({
     _id: req.params.id,
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
     isDeleted: false,
   }).populate("assignedTo", "name email");
   if (!sr) return sendError(res, 404, "Service request not found");
@@ -79,7 +79,7 @@ export async function updateStatus(req: AuthRequest, res: Response) {
     { new: true },
   );
   await AuditLog.create({
-    municipalityId: req.user!.municipalityId,
+    tenantId: req.user!.tenantId,
     actorId: req.user!.id,
     module: "service_requests", action: "STATUS_UPDATE", entityType: "ServiceRequest",
     entityId: sr!._id, before: { status: before.status }, after: { status },
@@ -99,12 +99,12 @@ export async function assignServiceRequest(req: AuthRequest, res: Response) {
 
 export async function updateServiceRequest(req: AuthRequest, res: Response) {
   const sr = await ServiceRequest.findOneAndUpdate(
-    { _id: req.params.id, municipalityId: req.user!.municipalityId, isDeleted: false },
+    { _id: req.params.id, tenantId: req.user!.tenantId, isDeleted: false },
     { $set: req.body }, { new: true }
   );
   if (!sr) return sendError(res, 404, "Service request not found");
   await AuditLog.create({
-    municipalityId: req.user!.municipalityId, actorId: req.user!.id,
+    tenantId: req.user!.tenantId, actorId: req.user!.id,
     module: "service_requests", action: "UPDATE", entityType: "ServiceRequest",
     entityId: sr._id, entityLabel: sr.trackingNumber || "unknown",
   });
@@ -113,12 +113,12 @@ export async function updateServiceRequest(req: AuthRequest, res: Response) {
 
 export async function deleteServiceRequest(req: AuthRequest, res: Response) {
   const sr = await ServiceRequest.findOneAndUpdate(
-    { _id: req.params.id, municipalityId: req.user!.municipalityId, isDeleted: false },
+    { _id: req.params.id, tenantId: req.user!.tenantId, isDeleted: false },
     { isDeleted: true }, { new: true }
   );
   if (!sr) return sendError(res, 404, "Service request not found");
   await AuditLog.create({
-    municipalityId: req.user!.municipalityId, actorId: req.user!.id,
+    tenantId: req.user!.tenantId, actorId: req.user!.id,
     module: "service_requests", action: "DELETE", entityType: "ServiceRequest",
     entityId: sr._id, entityLabel: sr.trackingNumber || "unknown",
   });
