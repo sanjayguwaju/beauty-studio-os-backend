@@ -16,7 +16,7 @@ export async function seedUsers(tenant: ITenant) {
   }
 
   // 1. Platform Admin
-  const platformEmail = 'platform@beautyos.com';
+  const platformEmail = 'admin@deployx.com';
   let platformAdmin = await User.findOne({ email: platformEmail });
   
   if (!platformAdmin) {
@@ -25,7 +25,7 @@ export async function seedUsers(tenant: ITenant) {
       name: 'Platform Administrator',
       nameNp: 'प्लेटफर्म प्रशासक',
       email: platformEmail,
-      password: 'Password123!',
+      password: 'admin123',
       phone: generateNepaliPhone(),
       roles: [platformAdminRole._id],
       rolesSlugs: ['platform_admin'],
@@ -35,7 +35,7 @@ export async function seedUsers(tenant: ITenant) {
   }
 
   // 1.5 Studio Admin
-  const adminEmail = 'admin@demo.beautyos.com';
+  const adminEmail = 'admin@demo.com';
   let admin = await User.findOne({ email: adminEmail });
   
   if (!admin) {
@@ -44,7 +44,7 @@ export async function seedUsers(tenant: ITenant) {
       name: 'Studio Administrator',
       nameNp: 'स्टुडियो प्रशासक',
       email: adminEmail,
-      password: 'Password123!',
+      password: 'admin123',
       phone: generateNepaliPhone(),
       roles: [studioAdminRole._id],
       rolesSlugs: ['studio_admin'],
@@ -58,17 +58,17 @@ export async function seedUsers(tenant: ITenant) {
   
   for (let i = 0; i < branches.length; i++) {
     const branch = branches[i];
-    const branchEmail = `branch${i+1}@demo.beautyos.com`;
+    const branchEmail = i === 0 ? 'john@demo.com' : `branch${i+1}@demo.com`;
     const existing = await User.findOne({ email: branchEmail });
     
     if (!existing) {
       await User.create({
         tenantId: tenant._id,
         branchId: branch._id,
-        name: `Branch ${i+1} Manager`,
+        name: i === 0 ? 'John Doe (Recruiter/Staff)' : `Branch ${i+1} Manager`,
         nameNp: `शाखा ${i+1} प्रबन्धक`,
         email: branchEmail,
-        password: 'Password123!',
+        password: 'admin123',
         phone: generateNepaliPhone(),
         roles: [branchManagerRole._id],
         rolesSlugs: ['branch_manager'],
