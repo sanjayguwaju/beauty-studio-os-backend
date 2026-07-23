@@ -129,7 +129,7 @@ app.get("/health", async (_req, res) => {
   res.json({ 
     status, 
     message,
-    service: "beauty-studio-os-api", 
+    service: "beautyxosapi", 
     timestamp: new Date().toISOString(),
     dependencies: {
       database: {
