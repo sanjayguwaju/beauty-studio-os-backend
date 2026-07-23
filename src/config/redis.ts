@@ -3,7 +3,12 @@ import { env } from "./env";
 import logger from "./logger";
 
 export const redis = env.REDIS_URL
-  ? new IORedis(env.REDIS_URL, { maxRetriesPerRequest: null, lazyConnect: true })
+  ? new IORedis(env.REDIS_URL, { 
+      maxRetriesPerRequest: null, 
+      lazyConnect: true,
+      family: 0, // Upstash recommended IPv4/IPv6 support
+      tls: env.REDIS_URL.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
+    })
   : new IORedis({
       host: env.REDIS_HOST,
       port: env.REDIS_PORT,
