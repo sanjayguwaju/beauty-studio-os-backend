@@ -7,27 +7,47 @@ import { generateNepaliPhone } from './utils';
 export async function seedUsers(tenant: ITenant) {
   console.log('👤 Seeding Users...');
 
-  const superAdminRole = await Role.findOne({ tenantId: tenant._id, slug: 'superadmin' });
+  const platformAdminRole = await Role.findOne({ tenantId: tenant._id, slug: 'platform_admin' });
+  const studioAdminRole = await Role.findOne({ tenantId: tenant._id, slug: 'studio_admin' });
   const branchManagerRole = await Role.findOne({ tenantId: tenant._id, slug: 'branch_manager' });
   
-  if (!superAdminRole || !branchManagerRole) {
+  if (!platformAdminRole || !studioAdminRole || !branchManagerRole) {
     throw new Error('Roles not found. Run roles seeder first.');
   }
 
-  // 1. Super Admin
+  // 1. Platform Admin
+  const platformEmail = 'platform@beautyos.com';
+  let platformAdmin = await User.findOne({ email: platformEmail });
+  
+  if (!platformAdmin) {
+    await User.create({
+      tenantId: tenant._id,
+      name: 'Platform Administrator',
+      nameNp: 'प्लेटफर्म प्रशासक',
+      email: platformEmail,
+      password: 'Password123!',
+      phone: generateNepaliPhone(),
+      roles: [platformAdminRole._id],
+      rolesSlugs: ['platform_admin'],
+      isActive: true,
+      designation: 'Platform Owner'
+    });
+  }
+
+  // 1.5 Studio Admin
   const adminEmail = 'admin@demo.beautyos.com';
   let admin = await User.findOne({ email: adminEmail });
   
   if (!admin) {
     await User.create({
       tenantId: tenant._id,
-      name: 'System Administrator',
-      nameNp: 'प्रणाली प्रशासक',
+      name: 'Studio Administrator',
+      nameNp: 'स्टुडियो प्रशासक',
       email: adminEmail,
       password: 'Password123!',
       phone: generateNepaliPhone(),
-      roles: [superAdminRole._id],
-      rolesSlugs: ['superadmin'],
+      roles: [studioAdminRole._id],
+      rolesSlugs: ['studio_admin'],
       isActive: true,
       designation: 'Studio Owner'
     });

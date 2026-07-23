@@ -8,10 +8,20 @@ export async function seedRoles(tenant: ITenant) {
   const roles = [
     {
       tenantId: tenant._id,
-      name: 'Super Admin',
-      nameNp: 'सुपर एडमिन',
-      slug: 'superadmin',
-      description: 'Full access to studio settings and data',
+      name: 'Platform Admin',
+      nameNp: 'प्लेटफर्म एडमिन',
+      slug: 'platform_admin',
+      description: 'Global system administrator',
+      isSystem: true,
+      level: 0,
+      permissions: [{ module: 'all', action: 'manage' }]
+    },
+    {
+      tenantId: tenant._id,
+      name: 'Studio Admin',
+      nameNp: 'स्टुडियो एडमिन',
+      slug: 'studio_admin',
+      description: 'Owner/Admin of the entire studio',
       isSystem: true,
       level: 1,
       permissions: [{ module: 'all', action: 'manage' }]

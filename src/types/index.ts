@@ -5,11 +5,11 @@ import { AppAbility } from "../casl/ability.factory";
 // ─── System Roles ──────────────────────────────────────────────────────────────
 export type SystemRole =
   | "platform_admin"
-  | "municipality_admin"
-  | "section_head"
-  | "ward_officer"
+  | "studio_admin"
+  | "branch_manager"
   | "staff"
-  | "citizen";
+  | "student"
+  | "client";
 
 // ─── Module Slugs ──────────────────────────────────────────────────────────────
 export const MODULES = [

@@ -162,7 +162,7 @@ export async function getTenantBranding(req: Request, res: Response) {
 
 export async function updateTenantSettings(req: AuthRequest, res: Response) {
   try {
-    if (!req.user || !req.user.roles.includes("municipality_admin")) {
+    if (!req.user || !req.user.roles.includes("studio_admin")) {
       return sendError(res, 403, "Forbidden: Only Studio Admins can update settings");
     }
 
@@ -265,7 +265,7 @@ export async function signupTenant(req: Request, res: Response) {
       role: "owner"
     });
 
-    user.rolesSlugs = ["municipality_admin" as any];
+    user.rolesSlugs = ["studio_admin" as any];
     await user.save();
 
     return sendSuccess(res, { tenant, user: { id: user._id, email: user.email } }, "Tenant created successfully", 201);
@@ -307,7 +307,7 @@ export async function impersonateTenant(req: AuthRequest, res: Response) {
       { 
         sub: targetUser._id.toString(), 
         tenantId,
-        roles: ["municipality_admin"],
+        roles: ["studio_admin"],
         isImpersonated: true,
         originalUserId: req.user.id
       },
